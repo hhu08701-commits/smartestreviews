@@ -1,14 +1,19 @@
 @props(['post'])
 
 @if($post->listItems->count() > 0)
-    <div class="bg-white rounded-lg border border-gray-200 overflow-hidden mb-8">
-        <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
-            <h3 class="text-lg font-semibold text-gray-900">{{ $post->title }}</h3>
+    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-500 rounded-lg overflow-hidden mb-8">
+        <div class="px-6 py-4">
+            <h3 class="text-xl font-semibold text-gray-900 flex items-center">
+                <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                </svg>
+                {{ $post->title }}
+            </h3>
         </div>
         
-        <div class="divide-y divide-gray-200">
+        <div class="divide-y divide-blue-200">
             @foreach($post->listItems as $item)
-                <div class="p-6 {{ $item->is_featured ? 'bg-blue-50' : '' }}">
+                <div class="p-6 {{ $item->is_featured ? 'bg-blue-100' : 'bg-white' }}">
                     <div class="flex items-start space-x-4">
                         <div class="flex-shrink-0">
                             <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">

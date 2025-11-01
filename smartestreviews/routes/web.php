@@ -16,6 +16,11 @@ use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\SourceController as AdminSourceController;
 use Illuminate\Support\Facades\Route;
 
+// Fallback login route for auth middleware (redirects to admin login)
+Route::get('/login', function () {
+    return redirect()->route('admin.login');
+})->name('login');
+
 // Admin authentication routes
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('login');

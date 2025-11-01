@@ -155,6 +155,65 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
+  
+  /* Improved content readability */
+  .prose {
+    line-height: 1.75 !important;
+  }
+  
+  .prose p {
+    margin-bottom: 1.5rem !important;
+    line-height: 1.8 !important;
+  }
+  
+  .prose p:last-child {
+    margin-bottom: 0 !important;
+  }
+  
+  .prose h2 {
+    margin-top: 2rem !important;
+    margin-bottom: 1rem !important;
+    line-height: 1.3 !important;
+  }
+  
+  .prose h3 {
+    margin-top: 1.5rem !important;
+    margin-bottom: 0.75rem !important;
+    line-height: 1.4 !important;
+  }
+  
+  .prose ul,
+  .prose ol {
+    margin-bottom: 1.5rem !important;
+    padding-left: 1.5rem !important;
+  }
+  
+  .prose li {
+    margin-bottom: 0.5rem !important;
+    line-height: 1.75 !important;
+  }
+  
+  .prose img {
+    margin: 2rem auto !important;
+    max-width: 100% !important;
+  }
+  
+  .prose blockquote {
+    margin: 1.5rem 0 !important;
+    padding: 1rem 1.5rem !important;
+    background-color: #f8f9fa !important;
+    border-left: 4px solid #3b82f6 !important;
+  }
+  
+  /* Product link highlight */
+  .product-link-box {
+    transition: all 0.3s ease;
+  }
+  
+  .product-link-box:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
 }
 
 /* Alpine.js x-cloak */

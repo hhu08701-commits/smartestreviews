@@ -1,6 +1,6 @@
 @props(['post'])
 
-<div class="bg-white rounded-lg border border-gray-200 p-6 mb-8">
+<div class="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-500 rounded-lg p-6 mb-8">
     <div class="flex items-start justify-between mb-4">
         <div>
             <h3 class="text-lg font-semibold text-gray-900 mb-1">

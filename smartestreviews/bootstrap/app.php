@@ -20,8 +20,13 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions): void {
         // Redirect to admin login when accessing admin routes while unauthenticated
         $exceptions->renderable(function (AuthenticationException $e, $request) {
-            if ($request->is('admin/*')) {
+            if ($request->is('admin/*') || $request->expectsJson()) {
+                if ($request->expectsJson()) {
+                    return response()->json(['message' => 'Unauthenticated.'], 401);
+                }
                 return redirect()->route('admin.login');
             }
+            // For non-admin routes, redirect to login route (which redirects to admin.login)
+            return redirect()->route('login');
         });
     })->create();

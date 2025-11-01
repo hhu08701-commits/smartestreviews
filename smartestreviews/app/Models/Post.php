@@ -73,14 +73,9 @@ class Post extends Model implements HasMedia
                 $post->slug = Str::slug($post->title);
             }
             
-            // Set default views_count to 2304 if not explicitly set
-            // This ensures every new post starts with at least 2304 views
-            if ($post->views_count === null) {
-                $post->views_count = 2304;
-            } elseif ($post->views_count < 2304) {
-                // If someone sets a value less than 2304, ensure it's at least 2304
-                $post->views_count = 2304;
-            }
+            // Đảm bảo tất cả bài viết mới luôn bắt đầu từ 2304 views
+            // Bỏ qua giá trị nhập vào và luôn set = 2304
+            $post->views_count = 2304;
         });
 
         static::updating(function ($post) {

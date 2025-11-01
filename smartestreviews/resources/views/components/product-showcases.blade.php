@@ -107,22 +107,33 @@
                             @endif
                         </div>
                         
-                        <!-- Affiliate Button -->
-                        <div class="pt-3">
-                            <a href="{{ $product->cloaked_url }}" 
-                               target="_blank" 
-                               rel="sponsored nofollow"
-                               class="w-full bg-blue-600 text-white px-4 py-3 rounded-lg hover:bg-blue-700 transition-colors inline-flex items-center justify-center font-medium">
-                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                                </svg>
-                                {{ $product->affiliate_label ?: 'View Details' }}
-                                @if($product->merchant)
-                                    <span class="ml-2 text-xs opacity-75">on {{ $product->merchant }}</span>
-                                @endif
-                            </a>
-                        </div>
+                        <!-- Affiliate Button - Luôn hiển thị nếu có affiliate_url -->
+                        @if($product->affiliate_url)
+                            <div class="pt-3">
+                                <a href="{{ $product->cloaked_url ?: $product->affiliate_url }}" 
+                                   target="_blank" 
+                                   rel="sponsored nofollow noopener"
+                                   class="w-full bg-blue-600 text-white px-4 py-3 rounded-lg hover:bg-blue-700 transition-all duration-200 inline-flex items-center justify-center font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                                    </svg>
+                                    {{ $product->affiliate_label ?: ($product->merchant ? 'Shop on ' . $product->merchant : 'View Details') }}
+                                    @if($product->merchant && $product->affiliate_label)
+                                        <span class="ml-2 text-xs opacity-75">on {{ $product->merchant }}</span>
+                                    @endif
+                                </a>
+                            </div>
+                        @else
+                            <!-- Hiển thị thông báo nếu chưa có link -->
+                            <div class="pt-3">
+                                <div class="w-full bg-gray-300 text-gray-600 px-4 py-3 rounded-lg inline-flex items-center justify-center font-medium cursor-not-allowed">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                    Link chưa được cập nhật
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
             @endforeach
