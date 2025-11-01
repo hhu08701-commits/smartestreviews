@@ -24,7 +24,7 @@ class SlideshowController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
             'image_url' => 'nullable|url|max:255',
             'category' => 'nullable|string|max:255',
             'button_text' => 'nullable|string|max:255',
@@ -73,7 +73,7 @@ class SlideshowController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
             'image_url' => 'nullable|url|max:255',
             'category' => 'nullable|string|max:255',
             'button_text' => 'nullable|string|max:255',

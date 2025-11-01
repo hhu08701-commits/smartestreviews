@@ -26,7 +26,7 @@ class HotProductController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'brand' => 'required|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
             'image_url' => 'nullable|url|max:255',
             'rating' => 'nullable|numeric|min:0|max:5',
             'price' => 'nullable|string|max:255',
@@ -77,7 +77,7 @@ class HotProductController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'brand' => 'required|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
             'image_url' => 'nullable|url|max:255',
             'rating' => 'nullable|numeric|min:0|max:5',
             'price' => 'nullable|string|max:255',
