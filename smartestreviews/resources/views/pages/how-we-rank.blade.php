@@ -87,13 +87,15 @@
         <!-- Sidebar -->
         <div class="lg:col-span-1">
             <!-- Search -->
-            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">SEARCH</h3>
-                <form class="flex">
-                    <input type="text" placeholder="Search products..." 
-                           class="flex-1 px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            <div style="background: #f5f5f5; padding: 20px; border-radius: 0; margin-bottom: 30px;">
+                <h3 style="margin: 0 0 15px 0; font-size: 16px; font-weight: 700; font-family: 'Montserrat', sans-serif; color: #333; text-transform: uppercase; letter-spacing: 0.5px;">SEARCH</h3>
+                <form role="search" method="get" action="{{ route('posts.index') }}" style="display: flex; gap: 0; align-items: stretch; background: #f0f0f0; border-radius: 6px; padding: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                    <input type="search" name="search" placeholder="Search..." required 
+                           style="flex: 1; padding: 10px 15px; border: none; background: #fff; border-radius: 4px 0 0 4px; font-size: 14px; font-family: 'Montserrat', sans-serif; outline: none; min-width: 0;"
+                           onfocus="this.style.borderColor='#f8c2eb'" onblur="this.style.borderColor='transparent'">
                     <button type="submit" 
-                            class="bg-pink-500 text-white px-4 py-2 rounded-r-md hover:bg-pink-600 transition-colors">
+                            style="background: #f8c2eb; color: #000; padding: 10px 24px; border: none; border-radius: 0 4px 4px 0; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; transition: all 0.3s; font-family: 'Montserrat', sans-serif; white-space: nowrap; flex-shrink: 0;"
+                            onmouseover="this.style.background='#e8a8d8'" onmouseout="this.style.background='#f8c2eb'">
                         SEARCH
                     </button>
                 </form>

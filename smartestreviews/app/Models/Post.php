@@ -47,6 +47,10 @@ class Post extends Model implements HasMedia
         'clicks_count',
         'is_featured',
         'featured_order',
+        'is_trending',
+        'trending_order',
+        'is_editor_pick',
+        'editor_pick_order',
     ];
 
     protected $casts = [
@@ -59,6 +63,8 @@ class Post extends Model implements HasMedia
         'views_count' => 'integer',
         'clicks_count' => 'integer',
         'is_featured' => 'boolean',
+        'is_trending' => 'boolean',
+        'is_editor_pick' => 'boolean',
     ];
 
     /**
@@ -172,6 +178,22 @@ class Post extends Model implements HasMedia
     public function scopeFeatured($query)
     {
         return $query->where('is_featured', true);
+    }
+
+    /**
+     * Scope a query to only include trending posts.
+     */
+    public function scopeTrending($query)
+    {
+        return $query->where('is_trending', true);
+    }
+
+    /**
+     * Scope a query to only include editor's pick posts.
+     */
+    public function scopeEditorPick($query)
+    {
+        return $query->where('is_editor_pick', true);
     }
 
     /**

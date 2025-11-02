@@ -71,12 +71,15 @@
                             <a 
                                 href="{{ route('categories.show', $relatedCategory) }}" 
                                 class="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 transition-colors group"
+                                style="transition: all 0.3s;"
+                                onmouseover="this.style.backgroundColor='#f9f0f5'; this.querySelector('span').style.color='#f8c2eb';" 
+                                onmouseout="this.style.backgroundColor=''; this.querySelector('span').style.color='';"
                             >
                                 <div class="flex items-center space-x-3">
                                     <div 
                                         class="w-3 h-3 rounded-full bg-blue-500"
                                     ></div>
-                                    <span class="text-sm text-gray-700 group-hover:text-gray-900">
+                                    <span class="text-sm text-gray-700" style="transition: color 0.3s;">
                                         {{ $relatedCategory->name }}
                                     </span>
                                 </div>

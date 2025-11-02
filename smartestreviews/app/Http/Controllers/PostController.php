@@ -32,6 +32,16 @@ class PostController extends Controller
             });
         }
 
+        // Filter by year and month (for Archives)
+        if ($request->has('year') && $request->year) {
+            $query->whereYear('published_at', $request->year);
+            
+            // If month is provided, filter by both year and month
+            if ($request->has('month') && $request->month) {
+                $query->whereMonth('published_at', intval($request->month));
+            }
+        }
+
         // Sort by
         $sortBy = $request->get('sort', 'published_at');
         $sortOrder = $request->get('order', 'desc');
@@ -55,7 +65,30 @@ class PostController extends Controller
         // Get categories for filter
         $categories = \App\Models\Category::active()->orderBy('name')->get();
 
-        return view('posts.index', compact('posts', 'categories'));
+        // Get posts for "You May Have Missed" section (6 posts, excluding current page posts)
+        $currentPagePostIds = $posts->pluck('id')->toArray();
+        $missedPostsQuery = Post::published()
+            ->with(['author', 'categories'])
+            ->whereNotIn('id', $currentPagePostIds)
+            ->latest('published_at');
+        
+        // Always get 6 posts, even if we need to include some from current page
+        $missedPosts = $missedPostsQuery->limit(6)->get();
+        
+        // If we don't have 6 posts, fill with random published posts
+        if ($missedPosts->count() < 6) {
+            $needed = 6 - $missedPosts->count();
+            $additionalPosts = Post::published()
+                ->with(['author', 'categories'])
+                ->whereNotIn('id', array_merge($currentPagePostIds, $missedPosts->pluck('id')->toArray()))
+                ->inRandomOrder()
+                ->limit($needed)
+                ->get();
+            
+            $missedPosts = $missedPosts->concat($additionalPosts)->take(6);
+        }
+
+        return view('posts.index', compact('posts', 'categories', 'missedPosts'));
     }
 
     /**

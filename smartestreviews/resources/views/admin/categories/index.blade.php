@@ -6,11 +6,12 @@
 <div class="mb-6">
     <div class="flex items-center justify-between">
         <div>
-            <h2 class="text-2xl font-bold text-gray-900">Categories</h2>
+            <h2 class="text-2xl font-bold text-gray-900" style="font-family: 'Montserrat', sans-serif;">Categories</h2>
             <p class="mt-1 text-sm text-gray-600">Manage content categories.</p>
         </div>
         <a href="{{ route('admin.categories.create') }}" 
-           class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors">
+           class="bg-[#f8c2eb] text-black px-4 py-2 rounded-md hover:bg-[#e8a8d8] transition-colors font-semibold"
+           style="font-family: 'Montserrat', sans-serif;">
             Add Category
         </a>
     </div>
@@ -58,7 +59,7 @@
 
                     <div class="mt-6 flex items-center justify-end space-x-2">
                         <a href="{{ route('admin.categories.show', $category) }}" class="px-3 py-2 text-sm rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50">View</a>
-                        <a href="{{ route('admin.categories.edit', $category) }}" class="px-3 py-2 text-sm rounded-md bg-blue-600 text-white hover:bg-blue-700">Edit</a>
+                        <a href="{{ route('admin.categories.edit', $category) }}" class="px-3 py-2 text-sm rounded-md bg-[#f8c2eb] text-black hover:bg-[#e8a8d8] font-semibold">Edit</a>
                         <form action="{{ route('admin.categories.destroy', $category) }}" method="POST" onsubmit="return confirm('Delete this category?')">
                             @csrf
                             @method('DELETE')
@@ -82,7 +83,8 @@
             <p class="mt-1 text-sm text-gray-500">Get started by creating a new category.</p>
             <div class="mt-6">
                 <a href="{{ route('admin.categories.create') }}" 
-                   class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
+                   class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-black bg-[#f8c2eb] hover:bg-[#e8a8d8] font-semibold"
+                   style="font-family: 'Montserrat', sans-serif;">
                     <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                     </svg>

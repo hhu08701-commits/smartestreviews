@@ -110,7 +110,7 @@ if ($post->post_type === 'review' && $post->rating) {
                 <div class="prose prose-lg max-w-none 
                     prose-headings:font-bold prose-headings:text-gray-900
                     prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-6
-                    prose-a:text-blue-600 prose-a:font-semibold prose-a:no-underline hover:prose-a:underline
+                    prose-a:text-[#f8c2eb] prose-a:font-semibold prose-a:no-underline hover:prose-a:underline
                     prose-strong:text-gray-900 prose-strong:font-semibold
                     prose-ul:space-y-2 prose-ul:mb-6
                     prose-ol:space-y-2 prose-ol:mb-6

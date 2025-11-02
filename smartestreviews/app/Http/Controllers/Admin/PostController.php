@@ -19,14 +19,71 @@ class PostController extends Controller
     //     $this->middleware('auth');
     // }
 
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $posts = Post::with(['author', 'categories'])
-                ->latest()
-                ->paginate(15);
+            $query = Post::with(['author', 'categories', 'tags']);
+            
+            // Search by title
+            if ($request->has('search') && $request->search) {
+                $query->where('title', 'like', '%' . $request->search . '%');
+            }
+            
+            // Filter by status
+            if ($request->has('status') && $request->status) {
+                $query->where('status', $request->status);
+            }
+            
+            // Filter by post type
+            if ($request->has('post_type') && $request->post_type) {
+                $query->where('post_type', $request->post_type);
+            }
+            
+            // Filter by featured
+            if ($request->has('is_featured')) {
+                $query->where('is_featured', $request->is_featured == '1');
+            }
+            
+            // Filter by trending
+            if ($request->has('is_trending')) {
+                $query->where('is_trending', $request->is_trending == '1');
+            }
+            
+            // Filter by category
+            if ($request->has('category_id') && $request->category_id) {
+                $query->whereHas('categories', function($q) use ($request) {
+                    $q->where('categories.id', $request->category_id);
+                });
+            }
+            
+            // Filter by tag
+            if ($request->has('tag_id') && $request->tag_id) {
+                $query->whereHas('tags', function($q) use ($request) {
+                    $q->where('tags.id', $request->tag_id);
+                });
+            }
+            
+            // Sort
+            $sortBy = $request->get('sort', 'created_at');
+            $sortOrder = $request->get('order', 'desc');
+            $query->orderBy($sortBy, $sortOrder);
+            
+            $posts = $query->paginate(15);
+            
+            // Get filter options
+            $categories = Category::where('is_active', true)->orderBy('name')->get();
+            $tags = Tag::where('is_active', true)->orderBy('name')->get();
+            
+            // Stats
+            $stats = [
+                'total' => Post::count(),
+                'published' => Post::where('status', 'published')->count(),
+                'draft' => Post::where('status', 'draft')->count(),
+                'featured' => Post::where('is_featured', true)->count(),
+                'trending' => Post::where('is_trending', true)->count(),
+            ];
 
-            return view('admin.posts.index', compact('posts'));
+            return view('admin.posts.index', compact('posts', 'categories', 'tags', 'stats'));
         } catch (\Exception $e) {
             return 'Error: ' . $e->getMessage();
         }
@@ -38,8 +95,9 @@ class PostController extends Controller
             $categories = Category::where('is_active', true)->get();
             $tags = Tag::where('is_active', true)->get();
             $users = User::all();
+            $existingAffiliateLinks = \App\Models\AffiliateLink::where('post_id', null)->where('enabled', true)->get();
 
-            return view('admin.posts.create', compact('categories', 'tags', 'users'));
+            return view('admin.posts.create', compact('categories', 'tags', 'users', 'existingAffiliateLinks'));
         } catch (\Exception $e) {
             return 'Error: ' . $e->getMessage();
         }
@@ -54,7 +112,7 @@ class PostController extends Controller
             'excerpt' => 'nullable|string|max:500',
             'content' => 'required|string',
             'post_type' => 'required|in:review,list,how-to',
-            'status' => 'required|in:draft,published',
+            'status' => 'required|in:draft,published,archived',
             'author_id' => 'required|exists:users,id',
             'categories' => 'array',
             'categories.*' => 'exists:categories,id',
@@ -66,6 +124,18 @@ class PostController extends Controller
             'image_upload' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'is_featured' => 'boolean',
             'featured_order' => 'nullable|integer|min:0',
+            // Review specific fields
+            'product_name' => 'nullable|string|max:255',
+            'brand' => 'nullable|string|max:255',
+            'rating' => 'nullable|numeric|min:0|max:5',
+            'price_text' => 'nullable|string|max:100',
+            'pros' => 'nullable|array',
+            'cons' => 'nullable|array',
+            'badges' => 'nullable|array',
+            // SEO fields
+            'meta_title' => 'nullable|string|max:255',
+            'meta_description' => 'nullable|string|max:500',
+            'meta_keywords' => 'nullable|array',
         ];
         
         // Only validate featured_image as URL if no file upload
@@ -110,6 +180,12 @@ class PostController extends Controller
             $publishedAt = \Carbon\Carbon::parse($request->published_at);
         }
 
+        // Process pros, cons, badges, meta_keywords arrays
+        $pros = $request->pros ? (is_array($request->pros) ? $request->pros : array_filter(explode("\n", $request->pros))) : null;
+        $cons = $request->cons ? (is_array($request->cons) ? $request->cons : array_filter(explode("\n", $request->cons))) : null;
+        $badges = $request->badges ? (is_array($request->badges) ? $request->badges : array_filter(explode("\n", $request->badges))) : null;
+        $metaKeywords = $request->meta_keywords ? (is_array($request->meta_keywords) ? $request->meta_keywords : array_filter(explode(',', $request->meta_keywords))) : null;
+
         $post = Post::create(array_merge([
             'title' => $request->title,
             'slug' => $request->slug ?: Str::slug($request->title),
@@ -124,6 +200,22 @@ class PostController extends Controller
             'featured_image_caption' => $request->featured_image_caption,
             'is_featured' => $request->has('is_featured'),
             'featured_order' => $request->featured_order ?? 0,
+            'is_trending' => $request->has('is_trending'),
+            'trending_order' => $request->trending_order ?? 0,
+            'is_editor_pick' => $request->has('is_editor_pick'),
+            'editor_pick_order' => $request->editor_pick_order ?? 0,
+            // Review specific
+            'product_name' => $request->product_name,
+            'brand' => $request->brand,
+            'rating' => $request->rating ? round($request->rating, 1) : null,
+            'price_text' => $request->price_text,
+            'pros' => $pros,
+            'cons' => $cons,
+            'badges' => $badges,
+            // SEO
+            'meta_title' => $request->meta_title,
+            'meta_description' => $request->meta_description,
+            'meta_keywords' => $metaKeywords,
         ], $imageData));
 
         if ($request->categories) {
@@ -151,9 +243,10 @@ class PostController extends Controller
         $tags = Tag::where('is_active', true)->get();
         $users = User::all();
         
-        $post->load(['categories', 'tags']);
+        $post->load(['categories', 'tags', 'affiliateLinks']);
+        $existingAffiliateLinks = \App\Models\AffiliateLink::where('post_id', null)->where('enabled', true)->get();
 
-        return view('admin.posts.edit', compact('post', 'categories', 'tags', 'users'));
+        return view('admin.posts.edit', compact('post', 'categories', 'tags', 'users', 'existingAffiliateLinks'));
     }
 
     public function update(Request $request, Post $post)
@@ -165,7 +258,7 @@ class PostController extends Controller
             'excerpt' => 'nullable|string|max:500',
             'content' => 'required|string',
             'post_type' => 'required|in:review,list,how-to',
-            'status' => 'required|in:draft,published',
+            'status' => 'required|in:draft,published,archived',
             'author_id' => 'required|exists:users,id',
             'categories' => 'array',
             'categories.*' => 'exists:categories,id',
@@ -177,6 +270,18 @@ class PostController extends Controller
             'image_upload' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'is_featured' => 'boolean',
             'featured_order' => 'nullable|integer|min:0',
+            // Review specific fields
+            'product_name' => 'nullable|string|max:255',
+            'brand' => 'nullable|string|max:255',
+            'rating' => 'nullable|numeric|min:0|max:5',
+            'price_text' => 'nullable|string|max:100',
+            'pros' => 'nullable|array',
+            'cons' => 'nullable|array',
+            'badges' => 'nullable|array',
+            // SEO fields
+            'meta_title' => 'nullable|string|max:255',
+            'meta_description' => 'nullable|string|max:500',
+            'meta_keywords' => 'nullable|array',
         ];
         
         // Only validate featured_image as URL if no file upload
@@ -230,6 +335,12 @@ class PostController extends Controller
             $publishedAt = \Carbon\Carbon::parse($request->published_at);
         }
 
+        // Process pros, cons, badges, meta_keywords arrays
+        $pros = $request->pros ? (is_array($request->pros) ? $request->pros : array_filter(explode("\n", $request->pros))) : null;
+        $cons = $request->cons ? (is_array($request->cons) ? $request->cons : array_filter(explode("\n", $request->cons))) : null;
+        $badges = $request->badges ? (is_array($request->badges) ? $request->badges : array_filter(explode("\n", $request->badges))) : null;
+        $metaKeywords = $request->meta_keywords ? (is_array($request->meta_keywords) ? $request->meta_keywords : array_filter(explode(',', $request->meta_keywords))) : null;
+
         $post->update(array_merge([
             'title' => $request->title,
             'slug' => $request->slug ?: Str::slug($request->title),
@@ -241,9 +352,25 @@ class PostController extends Controller
             'published_at' => $publishedAt,
             'is_featured' => $request->has('is_featured'),
             'featured_order' => $request->featured_order ?? 0,
+            'is_trending' => $request->has('is_trending'),
+            'trending_order' => $request->trending_order ?? 0,
+            'is_editor_pick' => $request->has('is_editor_pick'),
+            'editor_pick_order' => $request->editor_pick_order ?? 0,
             'featured_image' => $imageData['featured_image'] ?? $request->featured_image,
             'featured_image_alt' => $request->featured_image_alt,
             'featured_image_caption' => $request->featured_image_caption,
+            // Review specific
+            'product_name' => $request->product_name,
+            'brand' => $request->brand,
+            'rating' => $request->rating ? round($request->rating, 1) : null,
+            'price_text' => $request->price_text,
+            'pros' => $pros,
+            'cons' => $cons,
+            'badges' => $badges,
+            // SEO
+            'meta_title' => $request->meta_title,
+            'meta_description' => $request->meta_description,
+            'meta_keywords' => $metaKeywords,
         ], $imageData));
 
         if ($request->categories) {

@@ -35,12 +35,15 @@ class AffiliateLinkController extends Controller
         return view('admin.affiliate-links.index', compact('affiliateLinks', 'stats'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
         $posts = Post::where('status', 'published')->get();
         $products = Product::where('is_active', true)->get();
+        
+        // If post_id is provided in query, pre-select that post
+        $selectedPostId = $request->get('post_id');
 
-        return view('admin.affiliate-links.create', compact('posts', 'products'));
+        return view('admin.affiliate-links.create', compact('posts', 'products', 'selectedPostId'));
     }
 
     public function store(Request $request)
