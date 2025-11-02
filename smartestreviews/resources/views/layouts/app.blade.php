@@ -9,204 +9,207 @@
     <meta name="description" content="@yield('description', 'Discover the best products with our expert reviews, detailed comparisons, and unbiased recommendations. Find your perfect match today.')">
 
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap" rel="stylesheet" />
     
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            background-color: #ffffff;
+            color: #333;
+        }
+        
+        .container-wrapper {
+            max-width: 1140px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        .clearfix::after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .container-wrapper {
+                padding: 0 10px;
+            }
+            
+            .menu-desktop {
+                display: none !important;
+            }
+            
+            .mobile-menu-toggle {
+                display: block !important;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .site-title {
+                font-size: 28px !important;
+            }
+            
+            .bottom-header {
+                height: auto !important;
+                padding: 10px 0 !important;
+            }
+            
+            .main-navigation {
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
-<body class="font-sans antialiased bg-gray-50">
+<body>
     <!-- Header -->
-    <header class="bg-blue-600 shadow-lg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <!-- Logo -->
-                <div class="flex-shrink-0">
-                    <a href="{{ route('home') }}" class="flex items-center">
-                        <div class="h-8 w-8 bg-white rounded-lg flex items-center justify-center mr-3">
-                            <i class="fas fa-star text-blue-600"></i>
+    <header>
+        <!-- Mid Header with Logo -->
+        <div class="mid-header" style="background: #fff; padding: 20px 0; border-bottom: 1px solid #e0e0e0;">
+            <div class="container-wrapper">
+                <div class="mid-bar-flex" style="display: flex; align-items: center; justify-content: center;">
+                    <div class="logo" style="text-align: center;">
+                        <div class="site-branding">
+                            <a href="{{ route('home') }}" style="text-decoration: none; display: inline-block;">
+                                <h1 class="site-title" style="margin: 0; font-size: 36px; font-weight: 700; font-family: 'Montserrat', sans-serif; color: #000; line-height: 1.2;">
+                                    <span style="color: #000 !important; display: inline-block; position: relative; z-index: 1;">smartest</span>
+                                    <span style="color: #000 !important; position: relative; z-index: 1; display: inline-block;">
+                                        reviews
+                                        <span style="position: absolute; bottom: -5px; left: 0; right: 0; height: 3px; background: linear-gradient(to right, #9b51e0, #2670ff); z-index: 0;"></span>
+                                    </span>
+                                </h1>
+                                <p style="margin: 5px 0 0 0; font-size: 14px; color: #666 !important; font-weight: 400; font-style: italic; position: relative; z-index: 1;">
+                                    your favorite products, reviewed.
+                                </p>
+                            </a>
                         </div>
-                        <span class="text-white font-bold text-xl">Smartest Reviews</span>
-                    </a>
-                </div>
-
-                <!-- Navigation -->
-                <nav class="hidden md:flex space-x-8">
-                    <a href="{{ route('home') }}" 
-                       class="text-white hover:text-blue-200 px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('home') ? 'bg-blue-700' : '' }}">
-                        HOME
-                    </a>
-                    <a href="{{ route('privacy') }}" 
-                       class="text-white hover:text-blue-200 px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('privacy') ? 'bg-blue-700' : '' }}">
-                        PRIVACY POLICY
-                    </a>
-                    <a href="{{ route('posts.index') }}" 
-                       class="text-white hover:text-blue-200 px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('posts.*') ? 'bg-blue-700' : '' }}">
-                        LATEST POSTS
-                    </a>
-                    <a href="{{ route('how-we-rank') }}" 
-                       class="text-white hover:text-blue-200 px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('how-we-rank') ? 'bg-blue-700' : '' }}">
-                        HOW WE RANK
-                    </a>
-                </nav>
-
-                <!-- Right side icons -->
-                <div class="flex items-center space-x-4">
-                    <!-- Dark mode toggle -->
-                    <button class="text-white hover:text-blue-200 transition-colors">
-                        <i class="fas fa-sun"></i>
-                    </button>
-                    
-                    <!-- Search -->
-                    <button class="text-white hover:text-blue-200 transition-colors">
-                        <i class="fas fa-search"></i>
-                    </button>
-                    
-                    <!-- Notifications -->
-                    <button class="text-white hover:text-blue-200 transition-colors">
-                        <i class="fas fa-bell"></i>
-                    </button>
-                    
-                    <!-- Subscribe Button -->
-                    <a href="#" class="bg-yellow-400 hover:bg-yellow-500 text-black px-4 py-2 rounded-md font-semibold text-sm transition-colors">
-                        SUBSCRIBE
-                    </a>
-                </div>
-
-                <!-- Mobile menu button -->
-                <div class="md:hidden">
-                    <button @click="mobileMenuOpen = !mobileMenuOpen" class="text-white hover:text-blue-200">
-                        <i class="fas fa-bars"></i>
-                    </button>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Mobile menu -->
-        <div x-show="mobileMenuOpen" x-transition class="md:hidden bg-blue-700">
-            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="{{ route('home') }}" class="text-white hover:text-blue-200 block px-3 py-2 rounded-md text-base font-medium">HOME</a>
-                <a href="{{ route('privacy') }}" class="text-white hover:text-blue-200 block px-3 py-2 rounded-md text-base font-medium">PRIVACY POLICY</a>
-                <a href="{{ route('posts.index') }}" class="text-white hover:text-blue-200 block px-3 py-2 rounded-md text-base font-medium">LATEST POSTS</a>
-                <a href="{{ route('how-we-rank') }}" class="text-white hover:text-blue-200 block px-3 py-2 rounded-md text-base font-medium">HOW WE RANK</a>
+        <!-- Main Navigation Bar -->
+        <div id="main-navigation-bar" class="bottom-header" style="background-color: #6db2e2;">
+            <div class="container-wrapper">
+                <div style="display: flex; justify-between; align-items: center; height: 56px;">
+                    <!-- Navigation Menu -->
+                    <nav class="main-navigation" style="flex: 1;">
+                        <div class="menu main-menu menu-desktop" style="display: flex; align-items: center; gap: 0;">
+                            <a href="{{ route('home') }}" 
+                               style="color: #fff; text-decoration: none; padding: 10px 20px; font-size: 14px; font-weight: 700; text-transform: uppercase; font-family: 'Montserrat', sans-serif; {{ request()->routeIs('home') ? 'background-color: rgba(255,255,255,0.2);' : '' }}">
+                                Home
+                            </a>
+                            <a href="{{ route('privacy') }}" 
+                               style="color: #fff; text-decoration: none; padding: 10px 20px; font-size: 14px; font-weight: 700; text-transform: uppercase; font-family: 'Montserrat', sans-serif; {{ request()->routeIs('privacy') ? 'background-color: rgba(255,255,255,0.2);' : '' }}">
+                                Privacy Policy
+                            </a>
+                            <a href="{{ route('posts.index') }}" 
+                               style="color: #fff; text-decoration: none; padding: 10px 20px; font-size: 14px; font-weight: 700; text-transform: uppercase; font-family: 'Montserrat', sans-serif; {{ request()->routeIs('posts.*') ? 'background-color: rgba(255,255,255,0.2);' : '' }}">
+                                Latest Posts
+                            </a>
+                            <a href="{{ route('how-we-rank') }}" 
+                               style="color: #fff; text-decoration: none; padding: 10px 20px; font-size: 14px; font-weight: 700; text-transform: uppercase; font-family: 'Montserrat', sans-serif; {{ request()->routeIs('how-we-rank') ? 'background-color: rgba(255,255,255,0.2);' : '' }}">
+                                How We Rank
+                            </a>
+                        </div>
+                    </nav>
+
+                    <!-- Right Side Actions -->
+                    <div class="search-watch" style="display: flex; align-items: center; gap: 15px;">
+                        <!-- Search -->
+                        <div class="af-search-wrap">
+                            <a href="#" title="Search" class="search-icon" style="color: #fff; font-size: 18px; text-decoration: none;">
+                                <i class="fa fa-search"></i>
+                            </a>
+                        </div>
+                        
+                        <!-- Subscribe Button -->
+                        <div class="custom-menu-link">
+                            <a href="#" style="background: #ffd700; color: #000; padding: 8px 16px; border-radius: 4px; text-decoration: none; font-weight: 700; font-size: 13px; text-transform: uppercase; font-family: 'Montserrat', sans-serif;">
+                                <i class="fas fa-bell" style="margin-right: 5px;"></i>
+                                Subscribe
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </header>
 
     <!-- Breadcrumbs -->
     @if(isset($breadcrumbs) && count($breadcrumbs) > 1)
-    <div class="bg-white border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
-            <nav class="flex" aria-label="Breadcrumb">
-                <ol class="flex items-center space-x-2">
-                    @foreach($breadcrumbs as $breadcrumb)
-                        @if(!$loop->last)
-                            <li>
-                                <a href="{{ $breadcrumb['url'] }}" class="text-gray-500 hover:text-gray-700 text-sm">
-                                    {{ $breadcrumb['name'] }}
-                                </a>
-                            </li>
-                            <li>
-                                <i class="fas fa-chevron-right text-gray-400 text-xs"></i>
-                            </li>
-                        @else
-                            <li>
-                                <span class="text-gray-900 text-sm font-medium">{{ $breadcrumb['name'] }}</span>
-                            </li>
-                        @endif
-                    @endforeach
-                </ol>
+    <div style="background: #fff; border-bottom: 1px solid #e0e0e0;">
+        <div class="container-wrapper" style="padding: 10px 15px;">
+            <nav style="font-size: 13px;">
+                @foreach($breadcrumbs as $breadcrumb)
+                    @if(!$loop->last)
+                        <a href="{{ $breadcrumb['url'] }}" style="color: #666; text-decoration: none;">
+                            {{ $breadcrumb['name'] }}
+                        </a>
+                        <span style="margin: 0 8px; color: #ccc;">/</span>
+                    @else
+                        <span style="color: #333; font-weight: 600;">{{ $breadcrumb['name'] }}</span>
+                    @endif
+                @endforeach
             </nav>
         </div>
     </div>
     @endif
 
     <!-- Main Content -->
-    <main class="min-h-screen">
+    <main>
         @yield('content')
     </main>
 
+    <!-- YOU MAY HAVE MISSED Section - Available on all pages -->
+    <x-missed-posts />
+
     <!-- Footer -->
-    <footer class="bg-gray-900 text-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <!-- Logo & Description -->
-                <div class="col-span-1 md:col-span-2">
-                    <div class="flex items-center mb-4">
-                        <div class="h-8 w-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
-                            <i class="fas fa-star text-white"></i>
-                        </div>
-                        <span class="font-bold text-xl">Smartest Reviews</span>
-                    </div>
-                    <p class="text-gray-400 mb-4">
-                        Expert product reviews, detailed comparisons, and unbiased recommendations to help you make informed decisions.
-                    </p>
-                    <div class="flex space-x-4">
-                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
-                            <i class="fab fa-facebook-f"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
-                            <i class="fab fa-youtube"></i>
-                        </a>
+    <footer class="site-footer aft-footer-sidebar-col-0" style="background: #2c3e50; color: #fff; padding: 20px 0;">
+        <div class="site-info">
+            <div class="container-wrapper">
+                <div class="af-container-row" style="text-align: center; font-size: 14px; color: #bdc3c7; font-family: 'Montserrat', sans-serif;">
+                    <div class="col-1 color-pad">
+                        Copyright © {{ date('Y') }} All rights reserved.
+                        <span class="sep" style="margin: 0 10px;">|</span>
+                        <a href="https://afthemes.com/products/chromenews/" target="_blank" style="color: #bdc3c7; text-decoration: none;">ChromeNews</a> by AF themes.
                     </div>
                 </div>
-
-                <!-- Quick Links -->
-                <div>
-                    <h3 class="font-semibold mb-4">Quick Links</h3>
-                    <ul class="space-y-2">
-                        <li><a href="{{ route('home') }}" class="text-gray-400 hover:text-white transition-colors">Home</a></li>
-                        <li><a href="{{ route('posts.index') }}" class="text-gray-400 hover:text-white transition-colors">Latest Posts</a></li>
-                        <li><a href="{{ route('how-we-rank') }}" class="text-gray-400 hover:text-white transition-colors">How We Rank</a></li>
-                        <li><a href="{{ route('privacy') }}" class="text-gray-400 hover:text-white transition-colors">Privacy Policy</a></li>
-                    </ul>
-                </div>
-
-                <!-- Categories -->
-                <div>
-                    <h3 class="font-semibold mb-4">Categories</h3>
-                    <ul class="space-y-2">
-                        @foreach(\App\Models\Category::active()->take(5)->get() as $category)
-                            <li>
-                                <a href="{{ route('categories.show', $category->slug) }}" 
-                                   class="text-gray-400 hover:text-white transition-colors">
-                                    {{ $category->name }}
-                                </a>
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
-            </div>
-
-            <div class="border-t border-gray-800 mt-8 pt-8 text-center">
-                <p class="text-gray-400">
-                    © {{ date('Y') }} Smartest Reviews. All rights reserved. | 
-                    <a href="{{ route('privacy') }}" class="hover:text-white transition-colors">Privacy Policy</a> | 
-                    <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
-                </p>
             </div>
         </div>
     </footer>
 
-    <!-- Alpine.js Data -->
+    <!-- Scroll to Top Button -->
+    <a id="scroll-up" 
+       onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
+       style="position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; background: #f8c2eb; color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; box-shadow: 0 4px 12px rgba(0,0,0,0.15); opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 1000;">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+
     <script>
-        document.addEventListener('alpine:init', () => {
-            Alpine.data('app', () => ({
-                mobileMenuOpen: false,
-                
-                init() {
-                    // Initialize any global functionality
-                }
-            }));
+        // Scroll to top button
+        window.addEventListener('scroll', function() {
+            const scrollBtn = document.getElementById('scroll-up');
+            if (window.scrollY > 300) {
+                scrollBtn.style.opacity = '1';
+                scrollBtn.style.pointerEvents = 'auto';
+            } else {
+                scrollBtn.style.opacity = '0';
+                scrollBtn.style.pointerEvents = 'none';
+            }
         });
     </script>
 </body>

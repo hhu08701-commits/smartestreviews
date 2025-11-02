@@ -24,7 +24,8 @@
         </div>
         
         <h2 class="text-xl font-semibold text-gray-900 mb-2 line-clamp-2">
-            <a href="{{ $post->url }}" class="hover:text-blue-600 transition-colors">
+            <a href="{{ $post->url }}" class="hover:text-[#f8c2eb] transition-colors" style="transition: color 0.3s;"
+               onmouseover="this.style.color='#f8c2eb'" onmouseout="this.style.color='inherit'">
                 {{ $post->title }}
             </a>
         </h2>

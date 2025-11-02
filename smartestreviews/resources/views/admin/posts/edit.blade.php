@@ -135,6 +135,7 @@
                     <option value="">Select status</option>
                     <option value="draft" {{ old('status', $post->status) == 'draft' ? 'selected' : '' }}>Draft</option>
                     <option value="published" {{ old('status', $post->status) == 'published' ? 'selected' : '' }}>Published</option>
+                    <option value="archived" {{ old('status', $post->status) == 'archived' ? 'selected' : '' }}>Archived</option>
                 </select>
                 @error('status')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -163,31 +164,287 @@
                            value="{{ old('published_at', $post->published_at ? $post->published_at->format('Y-m-d\TH:i') : '') }}"
                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     <p class="mt-1 text-sm text-gray-500">Leave empty to publish immediately when status is "Published".</p>
+                    <p class="mt-1 text-xs text-green-600 font-semibold">
+                        <i class="fas fa-info-circle"></i> Khi đăng bài với status "Published", bài sẽ hiển thị ngay trên client!
+                    </p>
                     @error('published_at')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <div>
-                    <label class="flex items-center">
-                        <input type="checkbox" name="is_featured" value="1" {{ old('is_featured', $post->is_featured) ? 'checked' : '' }}
-                               class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                        <span class="ml-2 text-sm text-gray-700">Featured on Homepage (Latest Reviews)</span>
-                    </label>
-                    <p class="mt-1 text-sm text-gray-500">Check this to display this post in "Latest Reviews" section on homepage</p>
+                <div class="md:col-span-2 p-4 bg-purple-50 border-2 border-purple-200 rounded-lg">
+                    <div class="flex items-start">
+                        <input type="checkbox" name="is_featured" id="is_featured" value="1" {{ old('is_featured', $post->is_featured ?? false) ? 'checked' : '' }}
+                               class="mt-1 rounded border-gray-300 text-[#f8c2eb] shadow-sm focus:border-[#f8c2eb] focus:ring focus:ring-[#f8c2eb] focus:ring-opacity-50"
+                               onchange="toggleFeaturedFields()">
+                        <div class="ml-3 flex-1">
+                            <label for="is_featured" class="text-sm font-semibold text-gray-900 cursor-pointer flex items-center">
+                                <i class="fas fa-star text-purple-600 mr-2"></i>
+                                Featured Posts
+                            </label>
+                            <p class="mt-1 text-sm text-gray-600">Đánh dấu bài viết này sẽ hiển thị trong section "FEATURED POSTS" trên trang chủ</p>
+                            @if($post->status !== 'published' && ($post->is_featured ?? false))
+                            <p class="mt-1 text-xs text-red-600 font-semibold">
+                                <i class="fas fa-exclamation-triangle"></i> <strong>Warning:</strong> Post đang ở trạng thái "{{ ucfirst($post->status) }}". Chỉ hiển thị trên client khi Status = "Published"!
+                            </p>
+                            @else
+                            <p class="mt-1 text-xs text-orange-600 font-semibold">
+                                <i class="fas fa-exclamation-circle"></i> <strong>Lưu ý:</strong> Chỉ hiển thị trên client khi Status = "Published"!
+                            </p>
+                            @endif
+                            <p class="mt-1 text-xs text-gray-500">
+                                <i class="fas fa-info-circle"></i> Featured Posts khác với Editor's Picks - bạn có thể đánh dấu cả 2 hoặc chỉ 1 trong 2
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div id="featured_order_field" class="mt-4 {{ old('is_featured', $post->is_featured ?? false) ? '' : 'hidden' }}">
+                        <label for="featured_order" class="block text-sm font-medium text-gray-700">Featured Order (Thứ tự hiển thị)</label>
+                        <input type="number" name="featured_order" id="featured_order" value="{{ old('featured_order', $post->featured_order ?? 0) }}" min="0"
+                               class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#f8c2eb] focus:border-[#f8c2eb] sm:text-sm">
+                        <p class="mt-1 text-sm text-gray-500">
+                            <i class="fas fa-info-circle"></i> Số nhỏ hơn = hiển thị trước. Ví dụ: 0, 1, 2, 3... (Mặc định: 0)
+                        </p>
+                        @if($post->status === 'published')
+                        <p class="mt-2 text-xs text-green-600 font-semibold">
+                            <i class="fas fa-check-circle"></i> Bài viết sẽ <strong>hiển thị ngay</strong> trong section "FEATURED POSTS" trên trang chủ sau khi lưu!
+                        </p>
+                        @endif
+                        @error('featured_order')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
                 </div>
 
                 <div>
-                    <label for="featured_order" class="block text-sm font-medium text-gray-700">Featured Order</label>
-                    <input type="number" name="featured_order" id="featured_order" value="{{ old('featured_order', $post->featured_order ?? 0) }}" min="0"
-                           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                    <p class="mt-1 text-sm text-gray-500">Lower numbers appear first. Default: 0</p>
-                    @error('featured_order')
+                    <label class="flex items-center">
+                        <input type="checkbox" name="is_trending" value="1" {{ old('is_trending', $post->is_trending ?? false) ? 'checked' : '' }}
+                               class="rounded border-gray-300 text-[#f8c2eb] shadow-sm focus:border-[#f8c2eb] focus:ring focus:ring-[#f8c2eb] focus:ring-opacity-50">
+                        <span class="ml-2 text-sm text-gray-700">Trending Now</span>
+                    </label>
+                    <p class="mt-1 text-sm text-gray-500">Check this to display this post in "Trending Now" sidebar</p>
+                </div>
+
+                <div>
+                    <label for="trending_order" class="block text-sm font-medium text-gray-700">Trending Order</label>
+                    <input type="number" name="trending_order" id="trending_order" value="{{ old('trending_order', $post->trending_order ?? 0) }}" min="0"
+                           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#f8c2eb] focus:border-[#f8c2eb] sm:text-sm">
+                    <p class="mt-1 text-sm text-gray-500">Lower numbers appear first in Trending Now. Default: 0</p>
+                    @error('trending_order')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
+
+                <div class="md:col-span-2 p-4 bg-yellow-50 border-2 border-yellow-200 rounded-lg">
+                    <div class="flex items-start">
+                        <input type="checkbox" name="is_editor_pick" id="is_editor_pick" value="1" {{ old('is_editor_pick', $post->is_editor_pick ?? false) ? 'checked' : '' }}
+                               class="mt-1 rounded border-gray-300 text-[#f8c2eb] shadow-sm focus:border-[#f8c2eb] focus:ring focus:ring-[#f8c2eb] focus:ring-opacity-50"
+                               onchange="toggleEditorPickFields()">
+                        <div class="ml-3 flex-1">
+                            <label for="is_editor_pick" class="text-sm font-semibold text-gray-900 cursor-pointer flex items-center">
+                                <i class="fas fa-star text-yellow-600 mr-2"></i>
+                                Editor's Pick
+                            </label>
+                            <p class="mt-1 text-sm text-gray-600">Đánh dấu bài viết này sẽ hiển thị trong section "EDITOR'S PICKS" trên trang chủ</p>
+                            @if($post->status !== 'published' && ($post->is_editor_pick ?? false))
+                            <p class="mt-1 text-xs text-red-600 font-semibold">
+                                <i class="fas fa-exclamation-triangle"></i> <strong>Warning:</strong> Post đang ở trạng thái "{{ ucfirst($post->status) }}". Chỉ hiển thị trên client khi Status = "Published"!
+                            </p>
+                            @else
+                            <p class="mt-1 text-xs text-orange-600 font-semibold">
+                                <i class="fas fa-exclamation-circle"></i> <strong>Lưu ý:</strong> Chỉ hiển thị trên client khi Status = "Published"!
+                            </p>
+                            @endif
+                        </div>
+                    </div>
+                    
+                    <div id="editor_pick_order_field" class="mt-4 {{ old('is_editor_pick', $post->is_editor_pick ?? false) ? '' : 'hidden' }}">
+                        <label for="editor_pick_order" class="block text-sm font-medium text-gray-700">Editor's Pick Order (Thứ tự hiển thị)</label>
+                        <input type="number" name="editor_pick_order" id="editor_pick_order" value="{{ old('editor_pick_order', $post->editor_pick_order ?? 0) }}" min="0"
+                               class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#f8c2eb] focus:border-[#f8c2eb] sm:text-sm">
+                        <p class="mt-1 text-sm text-gray-500">
+                            <i class="fas fa-info-circle"></i> Số nhỏ hơn = hiển thị trước. Ví dụ: 0, 1, 2, 3... (Mặc định: 0)
+                        </p>
+                        @if($post->status === 'published')
+                        <p class="mt-2 text-xs text-green-600 font-semibold">
+                            <i class="fas fa-check-circle"></i> Bài viết sẽ <strong>hiển thị ngay</strong> trong section "EDITOR'S PICKS" trên trang chủ sau khi lưu!
+                        </p>
+                        @endif
+                        @error('editor_pick_order')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
             </div>
         </div>
+
+    <!-- Affiliate Links Section -->
+    <div class="bg-white shadow rounded-lg p-6">
+        <h3 class="text-lg font-medium text-gray-900 mb-4" style="font-family: 'Montserrat', sans-serif;">Affiliate Links</h3>
+        
+        @if($post->affiliateLinks->count() > 0)
+            <div class="mb-4">
+                <p class="text-sm font-medium text-gray-700 mb-2">Current Affiliate Links ({{ $post->affiliateLinks->count() }}):</p>
+                <div class="space-y-2">
+                    @foreach($post->affiliateLinks as $link)
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded border border-gray-200">
+                            <div class="flex-1">
+                                <p class="text-sm font-medium text-gray-900">{{ $link->label }}</p>
+                                <p class="text-xs text-gray-500">{{ $link->merchant }} - {{ $link->url }}</p>
+                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium mt-1 {{ $link->enabled ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                    {{ $link->enabled ? 'Enabled' : 'Disabled' }}
+                                </span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <a href="{{ route('admin.affiliate-links.edit', $link) }}" 
+                                   class="text-[#f8c2eb] hover:text-[#e8a8d8] text-sm font-semibold" target="_blank">
+                                    Edit
+                                </a>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @else
+            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
+                <p class="text-sm text-yellow-800">
+                    <strong>No affiliate links yet.</strong> 
+                </p>
+            </div>
+        @endif
+        
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <p class="text-sm text-blue-800 mb-2">
+                <strong>Add Affiliate Links:</strong>
+            </p>
+            <ul class="text-sm text-blue-800 list-disc list-inside space-y-1">
+                <li><a href="{{ route('admin.affiliate-links.create') }}?post_id={{ $post->id }}" target="_blank" class="text-[#f8c2eb] hover:underline font-semibold">Create New Link</a> and select this post</li>
+                <li>Or <a href="{{ route('admin.affiliate-links.index') }}" target="_blank" class="text-[#f8c2eb] hover:underline font-semibold">Edit existing links</a> to associate them with this post</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Review Specific Information (for post_type = review) -->
+    <div class="bg-white shadow rounded-lg p-6" id="review_fields">
+        <h3 class="text-lg font-medium text-gray-900 mb-4" style="font-family: 'Montserrat', sans-serif;">Review Information</h3>
+        <p class="text-sm text-gray-500 mb-4">Fill these fields if this is a product review.</p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <label for="product_name" class="block text-sm font-medium text-gray-700">Product Name</label>
+                <input type="text" name="product_name" id="product_name" value="{{ old('product_name', $post->product_name) }}"
+                       class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#f8c2eb] focus:border-[#f8c2eb] sm:text-sm">
+                @error('product_name')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div>
+                <label for="brand" class="block text-sm font-medium text-gray-700">Brand</label>
+                <input type="text" name="brand" id="brand" value="{{ old('brand', $post->brand) }}"
+                       class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#f8c2eb] focus:border-[#f8c2eb] sm:text-sm">
+                @error('brand')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div>
+                <label for="rating" class="block text-sm font-medium text-gray-700">Rating (0-5)</label>
+                <input type="number" name="rating" id="rating" value="{{ old('rating', $post->rating) }}" step="0.1" min="0" max="5"
+                       class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#f8c2eb] focus:border-[#f8c2eb] sm:text-sm"
+                       placeholder="4.5">
+                <p class="mt-1 text-sm text-gray-500">Enter rating from 0.0 to 5.0 (e.g., 4.5)</p>
+                @error('rating')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div>
+                <label for="price_text" class="block text-sm font-medium text-gray-700">Price Text</label>
+                <input type="text" name="price_text" id="price_text" value="{{ old('price_text', $post->price_text) }}"
+                       class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#f8c2eb] focus:border-[#f8c2eb] sm:text-sm"
+                       placeholder="e.g., $29.99">
+                @error('price_text')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+        </div>
+
+        <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <label for="pros" class="block text-sm font-medium text-gray-700">Pros (one per line)</label>
+                <textarea name="pros" id="pros" rows="6"
+                          class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#f8c2eb] focus:border-[#f8c2eb] sm:text-sm"
+                          placeholder="Enter each pro on a new line">{{ is_array(old('pros', $post->pros)) ? implode("\n", old('pros', $post->pros)) : (old('pros') ? old('pros') : ($post->pros ? implode("\n", $post->pros) : '')) }}</textarea>
+                <p class="mt-1 text-sm text-gray-500">Enter each advantage on a separate line</p>
+                @error('pros')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div>
+                <label for="cons" class="block text-sm font-medium text-gray-700">Cons (one per line)</label>
+                <textarea name="cons" id="cons" rows="6"
+                          class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#f8c2eb] focus:border-[#f8c2eb] sm:text-sm"
+                          placeholder="Enter each con on a new line">{{ is_array(old('cons', $post->cons)) ? implode("\n", old('cons', $post->cons)) : (old('cons') ? old('cons') : ($post->cons ? implode("\n", $post->cons) : '')) }}</textarea>
+                <p class="mt-1 text-sm text-gray-500">Enter each disadvantage on a separate line</p>
+                @error('cons')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+        </div>
+
+        <div class="mt-6">
+            <label for="badges" class="block text-sm font-medium text-gray-700">Badges (one per line)</label>
+            <textarea name="badges" id="badges" rows="3"
+                      class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#f8c2eb] focus:border-[#f8c2eb] sm:text-sm"
+                      placeholder="e.g., Best Overall&#10;Best Value&#10;Editor's Choice">{{ is_array(old('badges', $post->badges)) ? implode("\n", old('badges', $post->badges)) : (old('badges') ? old('badges') : ($post->badges ? implode("\n", $post->badges) : '')) }}</textarea>
+            <p class="mt-1 text-sm text-gray-500">Enter each badge on a separate line (e.g., "Best Overall", "Best Value")</p>
+            @error('badges')
+                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+            @enderror
+        </div>
+    </div>
+
+    <!-- SEO Settings -->
+    <div class="bg-white shadow rounded-lg p-6">
+        <h3 class="text-lg font-medium text-gray-900 mb-4" style="font-family: 'Montserrat', sans-serif;">SEO Settings</h3>
+        
+        <div class="space-y-6">
+            <div>
+                <label for="meta_title" class="block text-sm font-medium text-gray-700">Meta Title</label>
+                <input type="text" name="meta_title" id="meta_title" value="{{ old('meta_title', $post->meta_title) }}"
+                       class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#f8c2eb] focus:border-[#f8c2eb] sm:text-sm"
+                       placeholder="SEO title for search engines">
+                <p class="mt-1 text-sm text-gray-500">Leave empty to use post title</p>
+                @error('meta_title')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div>
+                <label for="meta_description" class="block text-sm font-medium text-gray-700">Meta Description</label>
+                <textarea name="meta_description" id="meta_description" rows="3"
+                          class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#f8c2eb] focus:border-[#f8c2eb] sm:text-sm"
+                          placeholder="SEO description for search engines">{{ old('meta_description', $post->meta_description) }}</textarea>
+                <p class="mt-1 text-sm text-gray-500">Leave empty to use excerpt</p>
+                @error('meta_description')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div>
+                <label for="meta_keywords" class="block text-sm font-medium text-gray-700">Meta Keywords</label>
+                <input type="text" name="meta_keywords" id="meta_keywords" value="{{ is_array(old('meta_keywords', $post->meta_keywords)) ? implode(', ', old('meta_keywords', $post->meta_keywords)) : (old('meta_keywords', $post->meta_keywords)) }}"
+                       class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#f8c2eb] focus:border-[#f8c2eb] sm:text-sm"
+                       placeholder="keyword1, keyword2, keyword3">
+                <p class="mt-1 text-sm text-gray-500">Comma-separated keywords for SEO</p>
+                @error('meta_keywords')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+        </div>
+    </div>
 
     <!-- Categories and Tags -->
     <div class="bg-white shadow rounded-lg p-6">
@@ -237,7 +494,8 @@
             Cancel
         </a>
         <button type="submit" 
-                class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors">
+                class="bg-[#f8c2eb] text-black px-4 py-2 rounded-md hover:bg-[#e8a8d8] transition-colors font-semibold"
+                style="font-family: 'Montserrat', sans-serif;">
             Update Post
         </button>
     </div>
@@ -278,6 +536,42 @@ document.addEventListener('DOMContentLoaded', function() {
                 imagePreview.classList.add('hidden');
             }
         });
+    }
+
+    // Toggle Editor's Pick Order field
+    function toggleEditorPickFields() {
+        const checkbox = document.getElementById('is_editor_pick');
+        const orderField = document.getElementById('editor_pick_order_field');
+        if (checkbox && orderField) {
+            if (checkbox.checked) {
+                orderField.classList.remove('hidden');
+            } else {
+                orderField.classList.add('hidden');
+            }
+        }
+    }
+    
+    // Initialize on page load
+    if (document.getElementById('is_editor_pick')) {
+        toggleEditorPickFields();
+    }
+    
+    // Toggle Featured Order field
+    function toggleFeaturedFields() {
+        const checkbox = document.getElementById('is_featured');
+        const orderField = document.getElementById('featured_order_field');
+        if (checkbox && orderField) {
+            if (checkbox.checked) {
+                orderField.classList.remove('hidden');
+            } else {
+                orderField.classList.add('hidden');
+            }
+        }
+    }
+    
+    // Initialize on page load
+    if (document.getElementById('is_featured')) {
+        toggleFeaturedFields();
     }
 });
 </script>

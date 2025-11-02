@@ -14,6 +14,8 @@ use App\Http\Controllers\Admin\SlideshowController as AdminSlideshowController;
 use App\Http\Controllers\Admin\HotProductController as AdminHotProductController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\SourceController as AdminSourceController;
+use App\Http\Controllers\Admin\TagController as AdminTagController;
+use App\Http\Controllers\Admin\BreakingNewsController as AdminBreakingNewsController;
 use Illuminate\Support\Facades\Route;
 
 // Fallback login route for auth middleware (redirects to admin login)
@@ -57,6 +59,12 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
             
             // Sources management
             Route::resource('sources', AdminSourceController::class);
+            
+            // Tags management
+            Route::resource('tags', AdminTagController::class);
+            
+            // Breaking News management
+            Route::resource('breaking-news', AdminBreakingNewsController::class);
         });
 
 // Client-side routes with page view tracking
