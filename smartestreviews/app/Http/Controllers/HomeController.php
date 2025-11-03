@@ -124,16 +124,13 @@ class HomeController extends Controller
         $totalHotProducts = HotProduct::active()->count();
         $showViewAllButton = $totalHotProducts > 5;
 
-        // Get breaking news from database - all active items
+        // Get breaking news from database - only actual BreakingNews items (no fallback)
         $breakingNewsItems = BreakingNews::active()
             ->with(['post', 'affiliateLink'])
             ->ordered()
             ->get();
         
-        // If no breaking news, fallback to latest posts (for backward compatibility)
-        if ($breakingNewsItems->isEmpty()) {
-            $breakingNewsItems = $latestPosts->take(5);
-        }
+        // No fallback - if no Breaking News items, section won't display
 
         return view('home', compact(
             'latestPosts',

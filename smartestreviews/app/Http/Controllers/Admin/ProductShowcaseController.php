@@ -66,14 +66,69 @@ class ProductShowcaseController extends Controller
         $imageData = [];
         if ($request->hasFile('image_upload')) {
             $file = $request->file('image_upload');
-            $filename = time() . '_' . Str::random(10) . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('uploads/products'), $filename);
             
-            $imageData = [
-                'image_path' => $filename,
-                'image_filename' => $filename,
-                'image_original_name' => $file->getClientOriginalName(),
-            ];
+            // Check for upload errors
+            if (!$file->isValid()) {
+                $errorMessages = [
+                    UPLOAD_ERR_INI_SIZE => 'File vượt quá giới hạn upload_max_filesize trong PHP config (2MB).',
+                    UPLOAD_ERR_FORM_SIZE => 'File vượt quá giới hạn MAX_FILE_SIZE trong form.',
+                    UPLOAD_ERR_PARTIAL => 'File chỉ được upload một phần.',
+                    UPLOAD_ERR_NO_FILE => 'Không có file nào được upload.',
+                    UPLOAD_ERR_NO_TMP_DIR => 'Thiếu thư mục tạm.',
+                    UPLOAD_ERR_CANT_WRITE => 'Không thể ghi file vào disk.',
+                    UPLOAD_ERR_EXTENSION => 'Upload bị dừng bởi PHP extension.',
+                ];
+                
+                $errorCode = $file->getError();
+                $errorMessage = $errorMessages[$errorCode] ?? 'Lỗi upload không xác định.';
+                
+                \Log::error('Product Showcase image upload failed (store)', [
+                    'error_code' => $errorCode,
+                    'error_message' => $errorMessage,
+                    'file_name' => $file->getClientOriginalName(),
+                    'file_size' => $file->getSize(),
+                ]);
+                
+                return back()->withInput()->withErrors(['image_upload' => $errorMessage]);
+            }
+            
+            // Validate file size (2MB max)
+            if ($file->getSize() > 2097152) {
+                return back()->withInput()->withErrors(['image_upload' => 'File vượt quá 2MB. Vui lòng chọn file nhỏ hơn.']);
+            }
+            
+            // Ensure upload directory exists
+            $uploadDir = public_path('uploads/products');
+            if (!file_exists($uploadDir)) {
+                mkdir($uploadDir, 0755, true);
+            }
+            
+            if (!is_writable($uploadDir)) {
+                \Log::error('Product Showcase upload directory not writable (store)', ['directory' => $uploadDir]);
+                return back()->withInput()->withErrors(['image_upload' => 'Không thể ghi vào thư mục upload.']);
+            }
+            
+            $filename = time() . '_' . Str::random(10) . '.' . $file->getClientOriginalExtension();
+            $moveResult = $file->move($uploadDir, $filename);
+            
+            if ($moveResult) {
+                $imageUrl = '/uploads/products/' . $filename;
+                $imageData = [
+                    'image_path' => $filename,
+                    'image_filename' => $filename,
+                    'image_original_name' => $file->getClientOriginalName(),
+                    'image_url' => $imageUrl,
+                ];
+                
+                \Log::info('Product Showcase image uploaded successfully (store)', [
+                    'filename' => $filename,
+                    'original_name' => $file->getClientOriginalName(),
+                    'size' => $file->getSize(),
+                ]);
+            } else {
+                \Log::error('Product Showcase image move failed (store)', ['filename' => $filename]);
+                return back()->withInput()->withErrors(['image_upload' => 'Không thể di chuyển file.']);
+            }
         }
 
         // Convert text fields to arrays
@@ -133,20 +188,75 @@ class ProductShowcaseController extends Controller
         // Handle image upload
         $imageData = [];
         if ($request->hasFile('image_upload')) {
-            // Delete old image if exists
-            if ($productShowcase->image_path && file_exists(public_path('uploads/products/' . $productShowcase->image_path))) {
-                unlink(public_path('uploads/products/' . $productShowcase->image_path));
+            $file = $request->file('image_upload');
+            
+            // Check for upload errors
+            if (!$file->isValid()) {
+                $errorMessages = [
+                    UPLOAD_ERR_INI_SIZE => 'File vượt quá giới hạn upload_max_filesize trong PHP config (2MB).',
+                    UPLOAD_ERR_FORM_SIZE => 'File vượt quá giới hạn MAX_FILE_SIZE trong form.',
+                    UPLOAD_ERR_PARTIAL => 'File chỉ được upload một phần.',
+                    UPLOAD_ERR_NO_FILE => 'Không có file nào được upload.',
+                    UPLOAD_ERR_NO_TMP_DIR => 'Thiếu thư mục tạm.',
+                    UPLOAD_ERR_CANT_WRITE => 'Không thể ghi file vào disk.',
+                    UPLOAD_ERR_EXTENSION => 'Upload bị dừng bởi PHP extension.',
+                ];
+                
+                $errorCode = $file->getError();
+                $errorMessage = $errorMessages[$errorCode] ?? 'Lỗi upload không xác định.';
+                
+                \Log::error('Product Showcase image upload failed', [
+                    'error_code' => $errorCode,
+                    'error_message' => $errorMessage,
+                    'file_name' => $file->getClientOriginalName(),
+                    'file_size' => $file->getSize(),
+                ]);
+                
+                return back()->withInput()->withErrors(['image_upload' => $errorMessage]);
             }
             
-            $file = $request->file('image_upload');
-            $filename = time() . '_' . Str::random(10) . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('uploads/products'), $filename);
+            // Validate file size (2MB max)
+            if ($file->getSize() > 2097152) {
+                return back()->withInput()->withErrors(['image_upload' => 'File vượt quá 2MB. Vui lòng chọn file nhỏ hơn.']);
+            }
             
-            $imageData = [
-                'image_path' => $filename,
-                'image_filename' => $filename,
-                'image_original_name' => $file->getClientOriginalName(),
-            ];
+            // Ensure upload directory exists
+            $uploadDir = public_path('uploads/products');
+            if (!file_exists($uploadDir)) {
+                mkdir($uploadDir, 0755, true);
+            }
+            
+            if (!is_writable($uploadDir)) {
+                \Log::error('Product Showcase upload directory not writable', ['directory' => $uploadDir]);
+                return back()->withInput()->withErrors(['image_upload' => 'Không thể ghi vào thư mục upload.']);
+            }
+            
+            // Delete old image if exists
+            if ($productShowcase->image_path && file_exists(public_path('uploads/products/' . $productShowcase->image_path))) {
+                @unlink(public_path('uploads/products/' . $productShowcase->image_path));
+            }
+            
+            $filename = time() . '_' . Str::random(10) . '.' . $file->getClientOriginalExtension();
+            $moveResult = $file->move($uploadDir, $filename);
+            
+            if ($moveResult) {
+                $imageUrl = '/uploads/products/' . $filename;
+                $imageData = [
+                    'image_path' => $filename,
+                    'image_filename' => $filename,
+                    'image_original_name' => $file->getClientOriginalName(),
+                    'image_url' => $imageUrl,
+                ];
+                
+                \Log::info('Product Showcase image uploaded successfully', [
+                    'filename' => $filename,
+                    'original_name' => $file->getClientOriginalName(),
+                    'size' => $file->getSize(),
+                ]);
+            } else {
+                \Log::error('Product Showcase image move failed', ['filename' => $filename]);
+                return back()->withInput()->withErrors(['image_upload' => 'Không thể di chuyển file.']);
+            }
         }
 
         // Convert text fields to arrays
