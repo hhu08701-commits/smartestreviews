@@ -8,7 +8,18 @@
     <p class="mt-1 text-sm text-gray-600">Update the post details below.</p>
 </div>
 
-<form method="POST" action="{{ route('admin.posts.update', $post) }}" enctype="multipart/form-data" class="space-y-6">
+@if($errors->any())
+    <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+        <p class="font-semibold mb-2">Có lỗi xảy ra:</p>
+        <ul class="list-disc list-inside">
+            @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
+<form method="POST" action="{{ route('admin.posts.update', $post) }}" enctype="multipart/form-data" class="space-y-6" id="edit-post-form">
     @csrf
     @method('PUT')
     
@@ -73,7 +84,10 @@
                 
                 @if($post->image_path)
                     <p class="mt-1 text-sm text-green-600">Current image: {{ $post->image_original_name }}</p>
-                    <img src="{{ asset('uploads/posts/' . $post->image_path) }}" alt="Current" class="mt-2 max-w-xs h-32 object-cover rounded border">
+                    <img src="{{ asset('uploads/posts/' . $post->image_path) }}?v={{ $post->updated_at->timestamp }}" alt="Current" class="mt-2 max-w-xs h-32 object-cover rounded border">
+                @elseif($post->featured_image)
+                    <p class="mt-1 text-sm text-green-600">Current image (URL):</p>
+                    <img src="{{ $post->featured_image }}" alt="Current" class="mt-2 max-w-xs h-32 object-cover rounded border" onerror="this.style.display='none';">
                 @endif
                 
                 <!-- Image Preview -->

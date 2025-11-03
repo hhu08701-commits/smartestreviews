@@ -91,15 +91,69 @@ class HotProductController extends Controller
 
         // Handle file upload
         if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            
+            // Check for upload errors
+            if (!$file->isValid()) {
+                $errorMessages = [
+                    UPLOAD_ERR_INI_SIZE => 'File vượt quá giới hạn upload_max_filesize trong PHP config (2MB).',
+                    UPLOAD_ERR_FORM_SIZE => 'File vượt quá giới hạn MAX_FILE_SIZE trong form.',
+                    UPLOAD_ERR_PARTIAL => 'File chỉ được upload một phần.',
+                    UPLOAD_ERR_NO_FILE => 'Không có file nào được upload.',
+                    UPLOAD_ERR_NO_TMP_DIR => 'Thiếu thư mục tạm.',
+                    UPLOAD_ERR_CANT_WRITE => 'Không thể ghi file vào disk.',
+                    UPLOAD_ERR_EXTENSION => 'Upload bị dừng bởi PHP extension.',
+                ];
+                
+                $errorCode = $file->getError();
+                $errorMessage = $errorMessages[$errorCode] ?? 'Lỗi upload không xác định.';
+                
+                \Log::error('Hot Product image upload failed', [
+                    'error_code' => $errorCode,
+                    'error_message' => $errorMessage,
+                    'file_name' => $file->getClientOriginalName(),
+                    'file_size' => $file->getSize(),
+                ]);
+                
+                return back()->withInput()->withErrors(['image' => $errorMessage]);
+            }
+            
+            // Validate file size (2MB max)
+            if ($file->getSize() > 2097152) {
+                return back()->withInput()->withErrors(['image' => 'File vượt quá 2MB. Vui lòng chọn file nhỏ hơn.']);
+            }
+            
+            // Ensure upload directory exists
+            $uploadDir = public_path('uploads/hot-products');
+            if (!file_exists($uploadDir)) {
+                mkdir($uploadDir, 0755, true);
+            }
+            
+            if (!is_writable($uploadDir)) {
+                \Log::error('Hot Product upload directory not writable', ['directory' => $uploadDir]);
+                return back()->withInput()->withErrors(['image' => 'Không thể ghi vào thư mục upload.']);
+            }
+            
             // Delete old image if exists
             if ($hotProduct->image && file_exists(public_path($hotProduct->image))) {
                 @unlink(public_path($hotProduct->image));
             }
 
-            $image = $request->file('image');
-            $filename = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('uploads/hot-products'), $filename);
-            $imagePath = '/uploads/hot-products/' . $filename;
+            $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $moveResult = $file->move($uploadDir, $filename);
+            
+            if ($moveResult) {
+                $imagePath = '/uploads/hot-products/' . $filename;
+                
+                \Log::info('Hot Product image uploaded successfully', [
+                    'filename' => $filename,
+                    'original_name' => $file->getClientOriginalName(),
+                    'size' => $file->getSize(),
+                ]);
+            } else {
+                \Log::error('Hot Product image move failed', ['filename' => $filename]);
+                return back()->withInput()->withErrors(['image' => 'Không thể di chuyển file.']);
+            }
         } elseif ($request->filled('image_url')) {
             $imagePath = $request->image_url;
         }

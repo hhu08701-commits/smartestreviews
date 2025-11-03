@@ -5,7 +5,13 @@
 
 @section('content')
 <div>
-    <!-- Breaking News Marquee Section -->
+    <!-- Breaking News Marquee Section - Only show if there are Breaking News items -->
+    @php
+        // Check if we have actual Breaking News items (not fallback posts)
+        $hasBreakingNews = $breakingNewsItems->isNotEmpty() && $breakingNewsItems->first() instanceof \App\Models\BreakingNews;
+    @endphp
+    
+    @if($hasBreakingNews)
     <section class="aft-blocks aft-main-banner-section" style="background: #f8f8f8; padding: 12px 0; border-bottom: 2px solid #dc3545;">
         <div class="banner-exclusive-posts-wrapper">
             <div class="container-wrapper">
@@ -91,6 +97,7 @@
             </div>
         </div>
     </section>
+    @endif
 
     <!-- Main Content Section -->
     <section class="aft-blocks aft-main-banner-section" style="padding: 30px 0; background: #fff;">
@@ -546,8 +553,8 @@
                                     <div class="archive-list-post list-style">
                                         <div class="af-double-column list-style clearfix aft-list-show-image" style="display: flex; align-items: flex-start; gap: 25px;">
                                             <!-- Image Column -->
-                                            <div class="col-3 float-l pos-rel read-img read-bg-img" style="width: 300px; flex-shrink: 0; position: relative;">
-                                                <a class="aft-post-image-link" href="{{ route('posts.show', [$post->published_at->year, $post->published_at->month, $post->slug]) }}" style="display: block; position: relative;">
+                                            <div class="col-3 float-l pos-rel read-img read-bg-img post-image-col" style="width: 300px; flex-shrink: 0; position: relative;">
+                                                <a class="aft-post-image-link" href="{{ route('posts.show', [$post->published_at->year, str_pad($post->published_at->month, 2, '0', STR_PAD_LEFT), $post->slug]) }}" style="display: block; position: relative;">
                                                     @if($post->featured_image)
                                                         <img width="300" height="300" src="{{ $post->featured_image }}" 
                                                              alt="{{ $post->title }}" 
@@ -594,7 +601,7 @@
                                             <div class="col-66 float-l pad read-details color-tp-pad" style="flex: 1; min-width: 0;">
                                                 <div class="read-title" style="margin-bottom: 15px;">
                                                     <h4 style="margin: 0; font-size: 24px; line-height: 1.3; font-weight: 700; font-family: 'Montserrat', sans-serif;">
-                                                        <a href="{{ route('posts.show', [$post->published_at->year, $post->published_at->month, $post->slug]) }}" 
+                                                        <a href="{{ route('posts.show', [$post->published_at->year, str_pad($post->published_at->month, 2, '0', STR_PAD_LEFT), $post->slug]) }}" 
                                                            style="color: #333; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#f8c2eb'" onmouseout="this.style.color='#333'">
                                                             {{ $post->title }}
                                                         </a>
@@ -636,7 +643,7 @@
                                                             {{ Str::limit(strip_tags($post->content), 200) }}
                                                         </p>
                                                         <div class="aft-readmore-wrapper" style="margin-top: 15px;">
-                                                            <a href="{{ route('posts.show', [$post->published_at->year, $post->published_at->month, $post->slug]) }}" 
+                                                            <a href="{{ route('posts.show', [$post->published_at->year, str_pad($post->published_at->month, 2, '0', STR_PAD_LEFT), $post->slug]) }}" 
                                                                class="aft-readmore" 
                                                                style="background: #f8c2eb; color: #000; padding: 10px 20px; border-radius: 4px; text-decoration: none; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; transition: all 0.3s;"
                                                                onmouseover="this.style.background='#e8a8d8'; this.style.transform='translateY(-2px)'" 
@@ -906,11 +913,17 @@
         filter: brightness(1.1);
     }
     
+    /* Prevent horizontal scroll on mobile */
+    body {
+        overflow-x: hidden;
+    }
+    
     /* Responsive */
     @media (max-width: 992px) {
         .aft-main-content[style*="width: 75%"],
         .aft-trending-part[style*="width: 25%"] {
             width: 100% !important;
+            float: none !important;
         }
         
         .aft-trending-part[style*="width: 25%"] {
@@ -920,16 +933,295 @@
         .editor-pick-item {
             min-width: calc(50% - 10px) !important;
         }
+        
+        /* Featured Posts Grid */
+        .featured-posts-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 15px !important;
+        }
+        
+        /* Main Content Column */
+        #primary[style*="width: 75%"],
+        #secondary[style*="width: 25%"] {
+            width: 100% !important;
+            float: none !important;
+        }
+        
+        #secondary[style*="width: 25%"] {
+            margin-top: 30px !important;
+        }
     }
     
     @media (max-width: 768px) {
         .editor-pick-item {
             min-width: calc(100% - 20px) !important;
+            width: calc(100% - 20px) !important;
         }
         
         .featured-banner-item img,
         .featured-banner-item div[style*="height: 450px"] {
-            height: 300px !important;
+            height: 250px !important;
+        }
+        
+        /* Featured Posts Grid - 1 column on mobile */
+        .featured-posts-grid {
+            grid-template-columns: 1fr !important;
+            gap: 20px !important;
+        }
+        
+        /* Featured Posts Title */
+        .widget-title.header-after1 {
+            font-size: 20px !important;
+        }
+        
+        /* Featured Posts Image Height */
+        .featured-post-item div[style*="height: 200px"] {
+            height: 180px !important;
+        }
+        
+        /* Breaking News Marquee */
+        .exclusive-now {
+            padding: 8px 16px !important;
+            font-size: 11px !important;
+        }
+        
+        .exclusive-slides {
+            padding-left: 10px !important;
+        }
+        
+        .circle-marq {
+            width: 30px !important;
+            height: 30px !important;
+            margin-right: 8px !important;
+        }
+        
+        .marquee a {
+            margin-right: 30px !important;
+            font-size: 12px !important;
+        }
+        
+        /* Editor's Picks Title and Buttons */
+        .af-title-subtitle-wrap {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 15px !important;
+        }
+        
+        .af-title-subtitle-wrap > div {
+            margin-left: 0 !important;
+        }
+        
+        /* Container Padding */
+        .container-wrapper {
+            padding: 0 10px !important;
+        }
+        
+        /* Main Content Padding */
+        .af-container-row.clearfix {
+            margin: 0 -10px !important;
+        }
+        
+        .aft-main-content[style*="padding: 0 15px"],
+        #primary[style*="padding: 0 15px"],
+        #secondary[style*="padding: 0 15px"],
+        .aft-main-content[style*="padding: 0 15px; float: left"],
+        #primary[style*="padding: 0 15px; float: left"],
+        #secondary[style*="padding: 0 15px; float: left"] {
+            padding: 0 10px !important;
+        }
+        
+        /* Section Spacing */
+        section[style*="padding: 40px 0"] {
+            padding: 30px 0 !important;
+        }
+        
+        /* Slideshow Height */
+        .featured-slideshow[style*="height: 450px"] {
+            height: 280px !important;
+        }
+        
+        /* Editor's Picks Card Width */
+        .editor-pick-item[style*="width: 350px"] {
+            width: calc(100vw - 40px) !important;
+            max-width: 100% !important;
+        }
+        
+        /* Latest Posts List */
+        article.latest-posts-list {
+            margin-bottom: 30px !important;
+            padding-bottom: 30px !important;
+        }
+        
+        /* Post Image in List */
+        .post-image-col {
+            width: 100% !important;
+            margin-bottom: 15px !important;
+            float: none !important;
+        }
+        
+        .read-details[style*="width: 66.666%"] {
+            width: 100% !important;
+            float: none !important;
+        }
+        
+        /* Blog Posts List Section - Mobile Layout */
+        .aft-main-breadcrumb-wrapper {
+            padding: 30px 0 !important;
+        }
+        
+        .af-double-column.list-style[style*="display: flex"] {
+            flex-direction: column !important;
+            gap: 20px !important;
+        }
+        
+        .col-3.float-l.pos-rel[style*="width: 300px"] {
+            width: 100% !important;
+            float: none !important;
+            margin-bottom: 0 !important;
+        }
+        
+        .col-3.float-l.pos-rel img[style*="width: 100%"],
+        .col-3.float-l.pos-rel div[style*="height: 300px"] {
+            height: 200px !important;
+        }
+        
+        .col-66.float-l.pad.read-details {
+            width: 100% !important;
+            float: none !important;
+            flex: none !important;
+        }
+        
+        /* Post Title */
+        .read-title h4[style*="font-size: 24px"] {
+            font-size: 20px !important;
+            line-height: 1.4 !important;
+        }
+        
+        /* Post Metadata */
+        .post-item-metadata .author-links {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 8px !important;
+        }
+        
+        /* Post Description */
+        .read-description .post-description {
+            font-size: 14px !important;
+        }
+        
+        /* Article Spacing */
+        article.latest-posts-list {
+            padding-bottom: 25px !important;
+            margin-bottom: 25px !important;
+        }
+        
+        /* Sidebar Widgets */
+        .widget.chromenews-widget {
+            padding: 15px !important;
+        }
+        
+        /* Search Form on Mobile */
+        .widget form[style*="display: flex"] {
+            flex-direction: column !important;
+            gap: 8px !important;
+        }
+        
+        .widget form input[type="search"] {
+            border-radius: 4px !important;
+            margin-bottom: 0 !important;
+        }
+        
+        .widget form button[type="submit"] {
+            border-radius: 4px !important;
+            width: 100% !important;
+            padding: 10px !important;
+        }
+        
+        /* Our Sources Images */
+        .widget .widget-title,
+        .widget h2.widget-title {
+            font-size: 16px !important;
+        }
+        
+        .widget img {
+            max-width: 100% !important;
+        }
+        
+        /* Recent Posts and Comments */
+        .wp-block-latest-posts__list li,
+        .wp-block-latest-comments li {
+            font-size: 13px !important;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .featured-banner-item img,
+        .featured-banner-item div[style*="height: 450px"] {
+            height: 200px !important;
+        }
+        
+        .featured-slideshow[style*="height: 450px"] {
+            height: 220px !important;
+        }
+        
+        .editor-pick-item[style*="width: 350px"] {
+            width: calc(100vw - 20px) !important;
+        }
+        
+        .container-wrapper {
+            padding: 0 8px !important;
+        }
+        
+        .af-container-row.clearfix {
+            margin: 0 -8px !important;
+        }
+        
+        .aft-main-content[style*="padding: 0 15px"],
+        #primary[style*="padding: 0 15px"],
+        #secondary[style*="padding: 0 15px"] {
+            padding: 0 8px !important;
+        }
+        
+        .featured-post-item div[style*="height: 200px"] {
+            height: 160px !important;
+        }
+        
+        .editor-pick-item div[style*="height: 220px"] {
+            height: 180px !important;
+        }
+        
+        /* Trending Now Section */
+        .aft-trending-part {
+            padding: 15px !important;
+        }
+        
+        /* Blog Posts List - Extra Small Mobile */
+        .col-3.float-l.pos-rel img[style*="height: 300px"],
+        .col-3.float-l.pos-rel div[style*="height: 300px"] {
+            height: 180px !important;
+        }
+        
+        .read-title h4[style*="font-size: 24px"] {
+            font-size: 18px !important;
+        }
+        
+        .read-description .post-description {
+            font-size: 13px !important;
+        }
+        
+        article.latest-posts-list {
+            padding-bottom: 20px !important;
+            margin-bottom: 20px !important;
+        }
+        
+        /* Prevent horizontal scroll */
+        html, body {
+            overflow-x: hidden !important;
+            max-width: 100vw !important;
+        }
+        
+        .container-wrapper {
+            max-width: 100% !important;
         }
     }
 </style>

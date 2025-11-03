@@ -74,10 +74,7 @@ class DownloadAndStoreImages extends Command
     protected function processPosts($force = false, $limit = null)
     {
         $query = Post::whereNotNull('featured_image')
-            ->where(function($q) {
-                $q->whereNull('image_path')
-                  ->orWhere('featured_image', 'like', 'http%');
-            });
+            ->where('featured_image', 'like', 'http%');
 
         if ($limit) {
             $query->limit($limit);
@@ -90,7 +87,9 @@ class DownloadAndStoreImages extends Command
         $errors = 0;
 
         $this->withProgressBar($posts, function ($post) use ($force, &$processed, &$skipped, &$errors) {
-            if (!$force && $post->image_path && file_exists(public_path('uploads/posts/' . $post->image_path))) {
+            // Skip if already local and file exists (unless force)
+            if (!$force && !filter_var($post->featured_image, FILTER_VALIDATE_URL) && 
+                file_exists(public_path($post->featured_image))) {
                 $skipped++;
                 return;
             }
@@ -106,11 +105,12 @@ class DownloadAndStoreImages extends Command
             $result = $this->downloadImage($imageUrl, 'posts', $post->id . '_featured');
             
             if ($result) {
+                $localPath = '/uploads/posts/' . $result['filename'];
                 $post->update([
                     'image_path' => $result['filename'],
                     'image_filename' => $result['filename'],
                     'image_original_name' => $result['original_name'],
-                    'featured_image' => '/uploads/posts/' . $result['filename'], // Keep featured_image for backward compatibility
+                    'featured_image' => $localPath, // Update to local path
                 ]);
                 $processed++;
             } else {
@@ -127,10 +127,9 @@ class DownloadAndStoreImages extends Command
      */
     protected function processProductShowcases($force = false, $limit = null)
     {
-        $query = ProductShowcase::whereNotNull('image_url')
-            ->where(function($q) {
-                $q->whereNull('image_path')
-                  ->orWhere('image_url', 'like', 'http%');
+        $query = ProductShowcase::where(function($q) {
+                $q->whereNotNull('image_url')
+                  ->where('image_url', 'like', 'http%');
             });
 
         if ($limit) {
@@ -144,12 +143,8 @@ class DownloadAndStoreImages extends Command
         $errors = 0;
 
         $this->withProgressBar($showcases, function ($showcase) use ($force, &$processed, &$skipped, &$errors) {
-            if (!$force && $showcase->image_path && file_exists(public_path('uploads/products/' . $showcase->image_path))) {
-                $skipped++;
-                return;
-            }
-
-            $imageUrl = $showcase->image_url;
+            // Use product_image_url first, fallback to image_url
+            $imageUrl = $showcase->product_image_url ?? $showcase->image_url;
             
             // Skip if not a URL
             if (!filter_var($imageUrl, FILTER_VALIDATE_URL)) {
@@ -157,10 +152,19 @@ class DownloadAndStoreImages extends Command
                 return;
             }
 
+            // Skip if already local and file exists (unless force)
+            if (!$force && !filter_var($imageUrl, FILTER_VALIDATE_URL) && 
+                file_exists(public_path($imageUrl))) {
+                $skipped++;
+                return;
+            }
+
             $result = $this->downloadImage($imageUrl, 'products', $showcase->id . '_product');
             
             if ($result) {
+                $localPath = '/uploads/products/' . $result['filename'];
                 $showcase->update([
+                    'image_url' => $localPath, // Update to local path
                     'image_path' => $result['filename'],
                     'image_filename' => $result['filename'],
                     'image_original_name' => $result['original_name'],
@@ -309,6 +313,21 @@ class DownloadAndStoreImages extends Command
     protected function downloadImage($url, $folder, $prefix = '')
     {
         try {
+            // Skip localhost/127.0.0.1 URLs - these are already local
+            $host = parse_url($url, PHP_URL_HOST);
+            if (in_array($host, ['localhost', '127.0.0.1', '::1']) || str_starts_with($host, '127.')) {
+                // Try to extract local path from URL
+                $path = parse_url($url, PHP_URL_PATH);
+                if ($path && file_exists(public_path($path))) {
+                    return [
+                        'filename' => basename($path),
+                        'original_name' => basename($path),
+                        'path' => public_path($path),
+                    ];
+                }
+                return false;
+            }
+
             // Create upload directory if it doesn't exist
             $uploadPath = public_path("uploads/{$folder}");
             if (!file_exists($uploadPath)) {
