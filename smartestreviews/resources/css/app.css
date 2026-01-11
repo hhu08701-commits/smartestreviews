@@ -1,39 +1,68 @@
 @import 'tailwindcss';
 
+/* Color Palette - Xanh nước biển chủ đạo */
+:root {
+  --primary-blue: #0ea5e9;      /* Sky blue - Màu chủ đạo */
+  --primary-blue-dark: #0284c7;  /* Blue - Màu đậm hơn */
+  --primary-blue-darker: #0369a1; /* Darker blue */
+  --primary-blue-light: #38bdf8; /* Light blue */
+  --accent-amber: #f59e0b;       /* Amber - Màu accent */
+  --accent-emerald: #10b981;     /* Emerald - Màu accent */
+  --accent-violet: #8b5cf6;      /* Violet - Màu accent */
+  --accent-rose: #f43f5e;        /* Rose - Màu accent */
+  --text-dark: #1e293b;          /* Dark text */
+  --text-gray: #64748b;          /* Gray text */
+  --bg-light: #f1f5f9;           /* Light background */
+  --bg-white: #ffffff;           /* White background */
+}
+
 /* Custom styles */
 @layer components {
   .btn-primary {
-    background-color: rgb(37 99 235);
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-dark) 100%);
     color: white;
-    font-weight: 500;
-    padding: 0.5rem 1rem;
+    font-weight: 600;
+    padding: 0.625rem 1.5rem;
     border-radius: 0.5rem;
-    transition: all 0.2s;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px -1px rgba(14, 165, 233, 0.3);
   }
   
   .btn-primary:hover {
-    background-color: rgb(29 78 216);
+    background: linear-gradient(135deg, var(--primary-blue-dark) 0%, var(--primary-blue-darker) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px -1px rgba(14, 165, 233, 0.4);
   }
   
   .btn-secondary {
-    background-color: rgb(229 231 235);
-    color: rgb(31 41 55);
-    font-weight: 500;
-    padding: 0.5rem 1rem;
+    background: linear-gradient(135deg, var(--bg-light) 0%, #e2e8f0 100%);
+    color: var(--text-dark);
+    font-weight: 600;
+    padding: 0.625rem 1.5rem;
     border-radius: 0.5rem;
-    transition: all 0.2s;
+    transition: all 0.3s ease;
+    border: 1px solid #cbd5e1;
   }
   
   .btn-secondary:hover {
-    background-color: rgb(209 213 219);
+    background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   }
   
   .card {
-    background-color: white;
-    border-radius: 0.5rem;
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-    border: 1px solid rgb(229 231 235);
+    background: linear-gradient(180deg, var(--bg-white) 0%, #f8fafc 100%);
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 6px -1px rgba(14, 165, 233, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(14, 165, 233, 0.1);
     overflow: hidden;
+    transition: all 0.3s ease;
+  }
+  
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px -1px rgba(14, 165, 233, 0.2), 0 4px 8px -1px rgba(0, 0, 0, 0.1);
+    border-color: var(--primary-blue-light);
   }
   
   .rating-stars {
@@ -201,8 +230,43 @@
   .prose blockquote {
     margin: 1.5rem 0 !important;
     padding: 1rem 1.5rem !important;
-    background-color: #f8f9fa !important;
-    border-left: 4px solid #3b82f6 !important;
+    background: linear-gradient(90deg, rgba(14, 165, 233, 0.1) 0%, rgba(14, 165, 233, 0.05) 100%) !important;
+    border-left: 4px solid var(--primary-blue) !important;
+    border-radius: 0.5rem !important;
+  }
+  
+  /* Gradient text */
+  .gradient-text {
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-violet) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  /* Accent colors for highlights */
+  .accent-amber {
+    color: var(--accent-amber);
+  }
+  
+  .accent-emerald {
+    color: var(--accent-emerald);
+  }
+  
+  .accent-violet {
+    color: var(--accent-violet);
+  }
+  
+  /* Link styles */
+  .prose a {
+    color: var(--primary-blue) !important;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.2s ease;
+  }
+  
+  .prose a:hover {
+    color: var(--primary-blue-dark) !important;
+    text-decoration: underline;
   }
   
   /* Product link highlight */

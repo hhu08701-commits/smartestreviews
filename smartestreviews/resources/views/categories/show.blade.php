@@ -4,7 +4,7 @@
 @section('description', $category->description ?? 'Browse ' . $category->name . ' reviews and recommendations')
 
 @section('content')
-<div class="max-w-7xl mx-auto">
+<div class="max-w-[1600px] mx-auto px-6 sm:px-8 lg:px-12">
     <!-- Breadcrumbs -->
     <x-breadcrumbs :items="[
         ['title' => 'Home', 'url' => route('home')],
@@ -15,7 +15,7 @@
         <!-- Main Content -->
         <div class="lg:col-span-3">
             <!-- Category Header -->
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-8">
+            <div class="bg-gradient-to-br from-white via-blue-50/30 to-sky-50/20 rounded-xl shadow-lg border border-blue-100/50 p-8 mb-8 backdrop-blur-sm">
                 <div class="flex items-center space-x-3 mb-4">
                     <div 
                         class="w-12 h-12 rounded-lg flex items-center justify-center bg-blue-100"

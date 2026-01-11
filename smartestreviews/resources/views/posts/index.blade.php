@@ -17,7 +17,7 @@
 @section('description', $pageDescription)
 
 @section('content')
-<div style="background: #fff; padding: 40px 0;">
+<div style="padding: 40px 0;">
     <div class="container-wrapper">
         <div class="af-container-row clearfix" style="display: flex; flex-wrap: wrap; margin: 0 -15px;">
             <!-- Main Content (75%) -->
