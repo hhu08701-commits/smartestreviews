@@ -12,14 +12,14 @@
     @endphp
     
     @if($hasBreakingNews)
-    <section class="aft-blocks aft-main-banner-section" style="background: #f8f8f8; padding: 12px 0; border-bottom: 2px solid #dc3545;">
+    <section class="aft-blocks aft-main-banner-section" style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); padding: 14px 0; border-bottom: 3px solid #0ea5e9; box-shadow: 0 2px 8px rgba(14, 165, 233, 0.15);">
         <div class="banner-exclusive-posts-wrapper">
             <div class="container-wrapper">
                 <div class="exclusive-posts" style="display: flex; align-items: center; overflow: hidden;">
-                    <div class="exclusive-now" style="background: #dc3545; padding: 10px 24px; margin-right: 0; border-radius: 0; position: relative; white-space: nowrap; border-right: 3px solid #dc3545;">
-                        <span style="color: #fff; font-weight: 700; font-size: 13px; text-transform: uppercase; font-family: 'Montserrat', sans-serif; position: relative; z-index: 1; letter-spacing: 0.5px;">Breaking News</span>
+                    <div class="exclusive-now" style="background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%); padding: 12px 28px; margin-right: 0; border-radius: 0 8px 8px 0; position: relative; white-space: nowrap; box-shadow: 2px 0 8px rgba(14, 165, 233, 0.3);">
+                        <span style="color: #fff; font-weight: 800; font-size: 14px; text-transform: uppercase; font-family: 'Montserrat', sans-serif; position: relative; z-index: 1; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">Breaking News</span>
                     </div>
-                    <div class="exclusive-slides" style="flex: 1; overflow: hidden; background: #f8f8f8; padding-left: 20px;">
+                    <div class="exclusive-slides" style="flex: 1; overflow: hidden; background: transparent; padding-left: 24px;">
                         <div class="marquee" style="display: flex; white-space: nowrap; animation: scroll-left 40s linear infinite;">
                             @php
                                 // Helper function to render breaking news item
@@ -100,7 +100,7 @@
     @endif
 
     <!-- Main Content Section -->
-    <section class="aft-blocks aft-main-banner-section" style="padding: 30px 0; background: #fff;">
+    <section class="aft-blocks aft-main-banner-section" style="padding: 30px 0; background: transparent;">
         <div class="container-wrapper">
             <div class="af-container-row clearfix" style="display: flex; flex-wrap: wrap; margin: 0 -15px; align-items: flex-start;">
                 <!-- Left Column: Featured Banner (75%) -->
@@ -223,7 +223,7 @@
                     @php $featuredPost = $latestPosts->first(); @endphp
                     <div class="aft-main-banner-part" style="margin-bottom: 0;">
                         <div class="af-widget-carousel" style="position: relative; border-radius: 8px; overflow: hidden;">
-                            <div class="featured-banner-item" style="position: relative; overflow: hidden; background: #fff;">
+                            <div class="featured-banner-item" style="position: relative; overflow: hidden; background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%); border-radius: 12px; box-shadow: 0 8px 24px rgba(14, 165, 233, 0.15);">
                                 <a href="{{ route('posts.show', [$featuredPost->published_at->year, str_pad($featuredPost->published_at->month, 2, '0', STR_PAD_LEFT), $featuredPost->slug]) }}" style="display: block; position: relative;">
                                     @if($featuredPost->featured_image)
                                         <img src="{{ $featuredPost->featured_image }}" 
@@ -231,11 +231,11 @@
                                              style="width: 100%; height: 450px; object-fit: cover; object-position: center; display: block;"
                                              loading="lazy"
                                              onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                        <div style="width: 100%; height: 450px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: none; align-items: center; justify-content: center;">
+                                        <div style="width: 100%; height: 450px; background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 50%, #8b5cf6 100%); display: none; align-items: center; justify-content: center;">
                                             <i class="fas fa-image" style="font-size: 72px; color: rgba(255,255,255,0.3);"></i>
                                         </div>
                                     @else
-                                        <div style="width: 100%; height: 450px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center;">
+                                        <div style="width: 100%; height: 450px; background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 50%, #8b5cf6 100%); display: flex; align-items: center; justify-content: center;">
                                             <i class="fas fa-image" style="font-size: 72px; color: rgba(255,255,255,0.3);"></i>
                                     </div>
                                 @endif
@@ -251,7 +251,7 @@
                                         @if($featuredPost->categories->count() > 0)
                                         <div class="read-categories" style="margin-bottom: 15px;">
                                             @foreach($featuredPost->categories->take(1) as $category)
-                                                <span style="background: #f8c2eb; color: #000; padding: 6px 14px; border-radius: 4px; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block;">
+                                                <span style="background: linear-gradient(135deg, #0ea5e9 0%, #8b5cf6 100%); color: #fff; padding: 6px 14px; border-radius: 6px; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; box-shadow: 0 2px 8px rgba(14, 165, 233, 0.3);">
                                                     {{ $category->name }}
                                                 </span>
                                             @endforeach
@@ -281,16 +281,20 @@
 
                 <!-- Right Column: Trending Now (25%) -->
                 <div class="aft-trending-part" style="width: 25%; padding: 0 15px; float: left; align-self: flex-start; margin-top: 0; height: 450px; display: flex; flex-direction: column;">
-                    <div class="af-title-subtitle-wrap" style="margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid #f8c2eb; padding-bottom: 5px; flex-shrink: 0;">
-                        <h4 class="widget-title" style="margin: 0; font-size: 16px; font-weight: 700; font-family: 'Montserrat', sans-serif; color: #333; text-transform: uppercase; letter-spacing: 0.5px; line-height: 1.2; flex: 1;">
+                    <div class="af-title-subtitle-wrap" style="margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid #0ea5e9; padding-bottom: 5px; flex-shrink: 0;">
+                        <h4 class="widget-title" style="margin: 0; font-size: 16px; font-weight: 700; font-family: 'Montserrat', sans-serif; background: linear-gradient(135deg, #0ea5e9 0%, #8b5cf6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-transform: uppercase; letter-spacing: 0.5px; line-height: 1.2; flex: 1;">
                             TRENDING NOW
                         </h4>
                         <div style="display: flex; flex-direction: row; gap: 2px; align-items: center; margin-left: 15px; flex-shrink: 0;">
-                            <button class="trending-prev" style="background: #f5f5f5; border: 1px solid #e0e0e0; width: 20px; height: 20px; border-radius: 2px 0 0 2px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s; padding: 0; margin: 0;">
-                                <i class="fas fa-chevron-up" style="font-size: 7px; color: #666;"></i>
+                            <button class="trending-prev" style="background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%); border: 1px solid rgba(14, 165, 233, 0.3); width: 24px; height: 24px; border-radius: 4px 0 0 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s; padding: 0; margin: 0;"
+                                    onmouseover="this.style.background='linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)'; this.querySelector('i').style.color='#fff'"
+                                    onmouseout="this.style.background='linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%)'; this.querySelector('i').style.color='#0ea5e9'">
+                                <i class="fas fa-chevron-up" style="font-size: 8px; color: #0ea5e9; transition: color 0.3s;"></i>
                             </button>
-                            <button class="trending-next" style="background: #f5f5f5; border: 1px solid #e0e0e0; border-left: none; width: 20px; height: 20px; border-radius: 0 2px 2px 0; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s; padding: 0; margin: 0;">
-                                <i class="fas fa-chevron-down" style="font-size: 7px; color: #666;"></i>
+                            <button class="trending-next" style="background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%); border: 1px solid rgba(14, 165, 233, 0.3); border-left: none; width: 24px; height: 24px; border-radius: 0 4px 4px 0; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s; padding: 0; margin: 0;"
+                                    onmouseover="this.style.background='linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)'; this.querySelector('i').style.color='#fff'"
+                                    onmouseout="this.style.background='linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%)'; this.querySelector('i').style.color='#0ea5e9'">
+                                <i class="fas fa-chevron-down" style="font-size: 8px; color: #0ea5e9; transition: color 0.3s;"></i>
                             </button>
                                             </div>
                                         </div>
@@ -325,7 +329,7 @@
                                                     <i class="fas fa-image" style="color: #ccc; font-size: 24px;"></i>
                                                 </div>
                                             @endif
-                                            <span style="position: absolute; top: 4px; left: 4px; background: #f8c2eb; color: #000; font-weight: 700; width: 28px; height: 28px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 13px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); z-index: 10;">
+                                            <span style="position: absolute; top: 4px; left: 4px; background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%); color: #fff; font-weight: 700; width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 14px; box-shadow: 0 3px 8px rgba(14, 165, 233, 0.4); z-index: 10; border: 2px solid rgba(255,255,255,0.3);">
                                                 {{ $index + 1 }}
                                             </span>
                                         @if($product->url)
@@ -384,19 +388,23 @@
     </section>
 
     <!-- Editor's Picks Section (Full Width) -->
-    <section style="padding: 40px 0; background: #fff;">
+    <section style="padding: 40px 0; background: transparent;">
         <div class="container-wrapper">
             <div class="af-title-subtitle-wrap" style="margin-bottom: 25px; display: flex; align-items: center; justify-content: space-between;">
-                <h4 class="widget-title header-after1" style="margin: 0; font-size: 24px; font-weight: 700; font-family: 'Montserrat', sans-serif; color: #333; position: relative; padding-bottom: 10px; flex: 1;">
-                    <span style="position: absolute; bottom: 0; left: 0; width: 60px; height: 3px; background: linear-gradient(to right, #f8c2eb, #f8c2eb);"></span>
+                <h4 class="widget-title header-after1" style="margin: 0; font-size: 26px; font-weight: 800; font-family: 'Montserrat', sans-serif; background: linear-gradient(135deg, #0ea5e9 0%, #8b5cf6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; position: relative; padding-bottom: 10px; flex: 1;">
+                    <span style="position: absolute; bottom: 0; left: 0; width: 80px; height: 4px; background: linear-gradient(to right, #0ea5e9, #8b5cf6); border-radius: 2px;"></span>
                     EDITOR'S PICKS
                 </h4>
                 <div style="display: flex; gap: 8px; margin-left: 20px; position: relative; z-index: 100;">
-                    <button class="editors-picks-prev" type="button" style="background: #f5f5f5; border: 1px solid #e0e0e0; width: 32px; height: 32px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s; position: relative; z-index: 10;" onmouseover="this.style.background='#e8e8e8'" onmouseout="this.style.background='#f5f5f5'">
-                        <i class="fas fa-chevron-left" style="font-size: 12px; color: #666; pointer-events: none;"></i>
+                    <button class="editors-picks-prev" type="button" style="background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%); border: 1px solid rgba(14, 165, 233, 0.3); width: 36px; height: 36px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s; position: relative; z-index: 10; box-shadow: 0 2px 6px rgba(14, 165, 233, 0.2);" 
+                            onmouseover="this.style.background='linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)'; this.querySelector('i').style.color='#fff'; this.style.transform='scale(1.1)'" 
+                            onmouseout="this.style.background='linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%)'; this.querySelector('i').style.color='#0ea5e9'; this.style.transform='scale(1)'">
+                        <i class="fas fa-chevron-left" style="font-size: 14px; color: #0ea5e9; pointer-events: none; transition: color 0.3s;"></i>
                     </button>
-                    <button class="editors-picks-next" type="button" style="background: #f5f5f5; border: 1px solid #e0e0e0; width: 32px; height: 32px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s; position: relative; z-index: 10;" onmouseover="this.style.background='#e8e8e8'" onmouseout="this.style.background='#f5f5f5'">
-                        <i class="fas fa-chevron-right" style="font-size: 12px; color: #666; pointer-events: none;"></i>
+                    <button class="editors-picks-next" type="button" style="background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%); border: 1px solid rgba(14, 165, 233, 0.3); width: 36px; height: 36px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s; position: relative; z-index: 10; box-shadow: 0 2px 6px rgba(14, 165, 233, 0.2);" 
+                            onmouseover="this.style.background='linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)'; this.querySelector('i').style.color='#fff'; this.style.transform='scale(1.1)'" 
+                            onmouseout="this.style.background='linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%)'; this.querySelector('i').style.color='#0ea5e9'; this.style.transform='scale(1)'">
+                        <i class="fas fa-chevron-right" style="font-size: 14px; color: #0ea5e9; pointer-events: none; transition: color 0.3s;"></i>
                     </button>
                 </div>
             </div>
@@ -405,7 +413,9 @@
                 <div class="editors-picks-container" style="display: flex; gap: 20px; overflow-x: auto; scroll-behavior: smooth; scrollbar-width: none; -ms-overflow-style: none; padding-bottom: 10px;">
                     <div class="editors-picks-wrapper" style="display: flex; gap: 20px; min-width: max-content;">
                     @foreach($editorsPicks->take(10) as $post)
-                        <div class="editor-pick-item" style="background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: transform 0.3s, box-shadow 0.3s; display: flex; flex-direction: column; width: 350px; flex-shrink: 0;">
+                        <div class="editor-pick-item" style="background: linear-gradient(to bottom, rgba(255,255,255,0.95) 0%, rgba(240,249,255,0.8) 100%); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(14, 165, 233, 0.15), 0 2px 4px rgba(0,0,0,0.05); border: 1px solid rgba(14, 165, 233, 0.1); transition: all 0.3s ease; display: flex; flex-direction: column; width: 350px; flex-shrink: 0;"
+                             onmouseover="this.style.transform='translateY(-6px)'; this.style.boxShadow='0 8px 20px rgba(14, 165, 233, 0.25), 0 4px 8px rgba(0,0,0,0.1)';"
+                             onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(14, 165, 233, 0.15), 0 2px 4px rgba(0,0,0,0.05)'">
                             <a href="{{ route('posts.show', [$post->published_at->year, str_pad($post->published_at->month, 2, '0', STR_PAD_LEFT), $post->slug]) }}" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; height: 100%;">
                                 <div style="position: relative; overflow: hidden; flex-shrink: 0;">
                                     @if($post->featured_image)
@@ -425,7 +435,7 @@
                                     
                                     <!-- Min read badge (yellow oval) -->
                                     <div style="position: absolute; top: 12px; left: 12px; z-index: 10;">
-                                        <span style="background: #ffd700; color: #000; padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: 700; display: inline-block;">
+                                        <span style="background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%); color: #fff; padding: 5px 12px; border-radius: 20px; font-size: 10px; font-weight: 700; display: inline-block; box-shadow: 0 2px 6px rgba(245, 158, 11, 0.3);">
                                             {{ ceil(str_word_count(strip_tags($post->content)) / 200) }} min read
                                         </span>
                                     </div>
@@ -434,7 +444,7 @@
                                     @if($post->categories->count() > 0)
                                     <div style="position: absolute; top: 12px; right: 12px; z-index: 10; display: flex; flex-direction: column; gap: 5px; align-items: flex-end;">
                                         @foreach($post->categories->take(3) as $category)
-                                            <span style="background: #f8c2eb; color: #000; padding: 4px 10px; border-radius: 4px; font-size: 10px; font-weight: 700; display: inline-block; white-space: nowrap;">
+                                            <span style="background: linear-gradient(135deg, #0ea5e9 0%, #8b5cf6 100%); color: #fff; padding: 4px 10px; border-radius: 6px; font-size: 10px; font-weight: 700; display: inline-block; white-space: nowrap; box-shadow: 0 2px 6px rgba(14, 165, 233, 0.3);">
                                                 {{ $category->name }}
                                             </span>
                                         @endforeach
@@ -443,8 +453,8 @@
                                 </div>
                                 
                                 <!-- Content below image -->
-                                <div style="padding: 18px; flex: 1; display: flex; flex-direction: column;">
-                                    <h4 style="margin: 0 0 12px 0; font-size: 17px; line-height: 1.4; font-weight: 700; font-family: 'Montserrat', sans-serif; color: #333; min-height: 48px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                                <div style="padding: 20px; flex: 1; display: flex; flex-direction: column;">
+                                    <h4 style="margin: 0 0 12px 0; font-size: 18px; line-height: 1.4; font-weight: 700; font-family: 'Montserrat', sans-serif; color: #1e293b; min-height: 50px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
                                         {{ Str::limit($post->title, 75) }}
                                     </h4>
                                     @if($post->rating)
@@ -476,7 +486,7 @@
     </section>
 
     <!-- Featured Posts Section (Full Width) -->
-    <section style="padding: 40px 0; background: #fff;">
+    <section style="padding: 40px 0; background: transparent;">
         <div class="container-wrapper">
             <div class="af-title-subtitle-wrap" style="margin-bottom: 25px;">
                 <h4 class="widget-title header-after1" style="margin: 0; font-size: 24px; font-weight: 700; font-family: 'Montserrat', sans-serif; color: #333; position: relative; padding-bottom: 10px;">
@@ -487,10 +497,10 @@
 
             <div class="featured-posts-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
                 @foreach($featuredPosts->take(9) as $post)
-                    <div class="featured-post-item" style="background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s;" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.12)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 6px rgba(0,0,0,0.08)'">
+                    <div class="featured-post-item" style="background: linear-gradient(to bottom, rgba(255,255,255,0.95) 0%, rgba(240,249,255,0.8) 100%); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(14, 165, 233, 0.15), 0 2px 4px rgba(0,0,0,0.05); border: 1px solid rgba(14, 165, 233, 0.1); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-6px)'; this.style.boxShadow='0 8px 20px rgba(14, 165, 233, 0.25), 0 4px 8px rgba(0,0,0,0.1)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(14, 165, 233, 0.15), 0 2px 4px rgba(0,0,0,0.05)'">
                         <a href="{{ route('posts.show', [$post->published_at->year, str_pad($post->published_at->month, 2, '0', STR_PAD_LEFT), $post->slug]) }}" style="text-decoration: none; color: inherit; display: block;">
                             <!-- Image -->
-                            <div style="width: 100%; height: 200px; overflow: hidden; background: #f0f0f0;">
+                            <div style="width: 100%; height: 200px; overflow: hidden; background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);">
                                 @if($post->featured_image)
                                     <img src="{{ $post->featured_image }}" 
                                          alt="{{ $post->title }}" 
@@ -499,19 +509,19 @@
                                          onmouseover="this.style.transform='scale(1.05)'" 
                                          onmouseout="this.style.transform='scale(1)'"
                                          onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                    <div style="width: 100%; height: 100%; display: none; align-items: center; justify-content: center; background: #f0f0f0;">
-                                        <i class="fas fa-image" style="font-size: 36px; color: #ccc;"></i>
+                                    <div style="width: 100%; height: 100%; display: none; align-items: center; justify-content: center; background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);">
+                                        <i class="fas fa-image" style="font-size: 36px; color: #0ea5e9; opacity: 0.4;"></i>
                                     </div>
                                 @else
-                                    <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
-                                        <i class="fas fa-image" style="font-size: 36px; color: #ccc;"></i>
+                                    <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);">
+                                        <i class="fas fa-image" style="font-size: 36px; color: #0ea5e9; opacity: 0.4;"></i>
                                     </div>
                                 @endif
                             </div>
                             
                             <!-- Content -->
-                            <div style="padding: 18px;">
-                                <h4 style="margin: 0 0 12px 0; font-size: 16px; line-height: 1.4; font-weight: 700; font-family: 'Montserrat', sans-serif; color: #333; min-height: 44px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                            <div style="padding: 20px;">
+                                <h4 style="margin: 0 0 12px 0; font-size: 17px; line-height: 1.4; font-weight: 700; font-family: 'Montserrat', sans-serif; color: #1e293b; min-height: 44px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
                                     {{ Str::limit($post->title, 80) }}
                                 </h4>
                                 @if($post->rating)
@@ -541,7 +551,7 @@
     </section>
 
     <!-- Blog Posts List Section -->
-    <section class="aft-main-breadcrumb-wrapper" style="padding: 40px 0; background: #fff;">
+    <section class="aft-main-breadcrumb-wrapper" style="padding: 40px 0; background: transparent;">
         <div class="container-wrapper">
             <div class="af-container-row clearfix" style="display: flex; flex-wrap: wrap; margin: 0 -15px;">
                 <!-- Main Content Column (75%) -->
@@ -549,7 +559,9 @@
                     <main id="main" class="site-main">
                         <div id="aft-archive-wrapper" class="aft-archive-wrapper clearfix" style="margin: 0;">
                             @foreach($latestPosts->slice(7) as $post)
-                                <article class="latest-posts-list archive-layout-list" style="margin-bottom: 40px; padding-bottom: 40px; border-bottom: 1px solid #e0e0e0;">
+                                <article class="latest-posts-list archive-layout-list" style="margin-bottom: 40px; padding: 30px; padding-bottom: 40px; border-bottom: 2px solid rgba(14, 165, 233, 0.15); background: linear-gradient(to bottom, rgba(255,255,255,0.6) 0%, rgba(240,249,255,0.4) 100%); border-radius: 12px; backdrop-blur-sm; transition: all 0.3s ease;"
+                                        onmouseover="this.style.transform='translateX(8px)'; this.style.boxShadow='0 4px 16px rgba(14, 165, 233, 0.15)'"
+                                        onmouseout="this.style.transform='translateX(0)'; this.style.boxShadow='none'">
                                     <div class="archive-list-post list-style">
                                         <div class="af-double-column list-style clearfix aft-list-show-image" style="display: flex; align-items: flex-start; gap: 25px;">
                                             <!-- Image Column -->
@@ -562,12 +574,12 @@
                                                              style="width: 100%; height: 300px; object-fit: cover; object-position: center; border-radius: 6px; display: block;"
                                                              loading="lazy"
                                                              onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                                        <div style="width: 100%; height: 300px; background: #f0f0f0; border-radius: 6px; display: none; align-items: center; justify-content: center;">
-                                                            <i class="fas fa-image" style="font-size: 48px; color: #ccc;"></i>
+                                                        <div style="width: 100%; height: 300px; background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%); border-radius: 8px; display: none; align-items: center; justify-content: center;">
+                                                            <i class="fas fa-image" style="font-size: 48px; color: #0ea5e9; opacity: 0.4;"></i>
                                                         </div>
                                                     @else
-                                                        <div style="width: 100%; height: 300px; background: #f0f0f0; border-radius: 6px; display: flex; align-items: center; justify-content: center;">
-                                                            <i class="fas fa-image" style="font-size: 48px; color: #ccc;"></i>
+                                                        <div style="width: 100%; height: 300px; background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                                                            <i class="fas fa-image" style="font-size: 48px; color: #0ea5e9; opacity: 0.4;"></i>
                                                         </div>
                                                     @endif
                                                     
@@ -585,7 +597,9 @@
                                                                     <li class="meta-category" style="display: inline-block;">
                                                                         <a class="chromenews-categories category-color-1" 
                                                                            href="{{ route('categories.show', $category->slug) }}"
-                                                                           style="background: #f8c2eb; color: #000; padding: 5px 10px; border-radius: 4px; font-size: 11px; font-weight: 600; text-decoration: none; display: inline-block;">
+                                                                           style="background: linear-gradient(135deg, #0ea5e9 0%, #8b5cf6 100%); color: #fff; padding: 5px 12px; border-radius: 6px; font-size: 11px; font-weight: 700; text-decoration: none; display: inline-block; box-shadow: 0 2px 6px rgba(14, 165, 233, 0.3); transition: all 0.3s;"
+                                                                           onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 3px 8px rgba(14, 165, 233, 0.4)'"
+                                                                           onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 2px 6px rgba(14, 165, 233, 0.3)'">
                                                                             {{ $category->name }}
                                                                         </a>
                                                                     </li>
@@ -602,7 +616,7 @@
                                                 <div class="read-title" style="margin-bottom: 15px;">
                                                     <h4 style="margin: 0; font-size: 24px; line-height: 1.3; font-weight: 700; font-family: 'Montserrat', sans-serif;">
                                                         <a href="{{ route('posts.show', [$post->published_at->year, str_pad($post->published_at->month, 2, '0', STR_PAD_LEFT), $post->slug]) }}" 
-                                                           style="color: #333; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#f8c2eb'" onmouseout="this.style.color='#333'">
+                                                           style="color: #1e293b; text-decoration: none; transition: all 0.3s; font-weight: 700;" onmouseover="this.style.color='#0ea5e9'; this.style.textShadow='0 2px 4px rgba(14, 165, 233, 0.2)'" onmouseout="this.style.color='#1e293b'; this.style.textShadow='none'">
                                                             {{ $post->title }}
                                                         </a>
                                                     </h4>
@@ -645,9 +659,9 @@
                                                         <div class="aft-readmore-wrapper" style="margin-top: 15px;">
                                                             <a href="{{ route('posts.show', [$post->published_at->year, str_pad($post->published_at->month, 2, '0', STR_PAD_LEFT), $post->slug]) }}" 
                                                                class="aft-readmore" 
-                                                               style="background: #f8c2eb; color: #000; padding: 10px 20px; border-radius: 4px; text-decoration: none; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; transition: all 0.3s;"
-                                                               onmouseover="this.style.background='#e8a8d8'; this.style.transform='translateY(-2px)'" 
-                                                               onmouseout="this.style.background='#f8c2eb'; this.style.transform='translateY(0)'">
+                                                               style="background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%); color: #fff; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; transition: all 0.3s; box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);"
+                                                               onmouseover="this.style.background='linear-gradient(135deg, #0284c7 0%, #0369a1 100%)'; this.style.transform='translateY(-3px)'; this.style.boxShadow='0 6px 16px rgba(14, 165, 233, 0.4)'" 
+                                                               onmouseout="this.style.background='linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)'; this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(14, 165, 233, 0.3)'">
                                                                 Read More
                                                             </a>
                                                         </div>
@@ -669,11 +683,11 @@
                     <div class="widget chromenews-widget" style="margin-bottom: 30px; background: #f5f5f5; padding: 20px; border-radius: 0;">
                         <form role="search" method="get" action="{{ route('posts.index') }}" style="display: flex; gap: 0; align-items: stretch; background: #f0f0f0; border-radius: 6px; padding: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
                             <input type="search" name="search" placeholder="Search..." required 
-                                   style="flex: 1; padding: 10px 15px; border: none; background: #fff; border-radius: 4px 0 0 4px; font-size: 14px; font-family: 'Montserrat', sans-serif; outline: none; min-width: 0;"
-                                   onfocus="this.style.borderColor='#f8c2eb'" onblur="this.style.borderColor='transparent'">
+                                   style="flex: 1; padding: 12px 16px; border: 2px solid rgba(14, 165, 233, 0.2); background: #fff; border-radius: 8px 0 0 8px; font-size: 14px; font-family: 'Montserrat', sans-serif; outline: none; min-width: 0; transition: all 0.3s;"
+                                   onfocus="this.style.borderColor='#0ea5e9'; this.style.boxShadow='0 0 0 3px rgba(14, 165, 233, 0.1)'" onblur="this.style.borderColor='rgba(14, 165, 233, 0.2)'; this.style.boxShadow='none'">
                             <button type="submit" 
-                                    style="background: #f8c2eb; color: #000; padding: 10px 24px; border: none; border-radius: 0 4px 4px 0; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; transition: all 0.3s; font-family: 'Montserrat', sans-serif; white-space: nowrap; flex-shrink: 0;"
-                                    onmouseover="this.style.background='#e8a8d8'" onmouseout="this.style.background='#f8c2eb'">
+                                    style="background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%); color: #fff; padding: 12px 24px; border: none; border-radius: 0 8px 8px 0; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; transition: all 0.3s; font-family: 'Montserrat', sans-serif; white-space: nowrap; flex-shrink: 0; box-shadow: 0 2px 8px rgba(14, 165, 233, 0.3);"
+                                    onmouseover="this.style.background='linear-gradient(135deg, #0284c7 0%, #0369a1 100%)'; this.style.transform='scale(1.02)'; this.style.boxShadow='0 4px 12px rgba(14, 165, 233, 0.4)'" onmouseout="this.style.background='linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)'; this.style.transform='scale(1)'; this.style.boxShadow='0 2px 8px rgba(14, 165, 233, 0.3)'">
                                 SEARCH
                             </button>
                         </form>
@@ -681,7 +695,7 @@
                     
                     <!-- Our Sources -->
                     <div class="widget chromenews-widget" style="margin-bottom: 20px; background: #fafafa; padding: 25px; border-radius: 8px;">
-                        <p style="text-align: center; margin: 0 0 15px 0; font-weight: 700; font-size: 16px; font-family: 'Montserrat', sans-serif; color: #333;">
+                        <p style="text-align: center; margin: 0 0 15px 0; font-weight: 800; font-size: 18px; font-family: 'Montserrat', sans-serif; background: linear-gradient(135deg, #0ea5e9 0%, #8b5cf6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-transform: uppercase; letter-spacing: 0.5px;">
                             Our Sources
                         </p>
                         <div style="display: flex; flex-direction: column; gap: 15px; align-items: center;">

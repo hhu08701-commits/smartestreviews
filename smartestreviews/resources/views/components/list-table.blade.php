@@ -53,38 +53,6 @@
                                             <span class="text-sm text-gray-600">{{ number_format($item->rating, 1) }}/5</span>
                                         </div>
                                     @endif
-                                    
-                                    @if($item->pros && count($item->pros) > 0)
-                                        <div class="mb-3">
-                                            <h5 class="text-sm font-medium text-green-700 mb-1">Pros:</h5>
-                                            <ul class="text-sm text-gray-700 space-y-1">
-                                                @foreach($item->pros as $pro)
-                                                    <li class="flex items-start">
-                                                        <svg class="w-3 h-3 text-green-500 mr-2 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                                                        </svg>
-                                                        {{ $pro }}
-                                                    </li>
-                                                @endforeach
-                                            </ul>
-                                        </div>
-                                    @endif
-                                    
-                                    @if($item->cons && count($item->cons) > 0)
-                                        <div class="mb-3">
-                                            <h5 class="text-sm font-medium text-red-700 mb-1">Cons:</h5>
-                                            <ul class="text-sm text-gray-700 space-y-1">
-                                                @foreach($item->cons as $con)
-                                                    <li class="flex items-start">
-                                                        <svg class="w-3 h-3 text-red-500 mr-2 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
-                                                        </svg>
-                                                        {{ $con }}
-                                                    </li>
-                                                @endforeach
-                                            </ul>
-                                        </div>
-                                    @endif
                                 </div>
                                 
                                 <div class="flex-shrink-0 ml-4">

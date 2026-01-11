@@ -82,30 +82,6 @@
                             </div>
                         @endif
                         
-                        <!-- Pros and Cons -->
-                        <div class="grid grid-cols-1 gap-3">
-                            @if($product->pros && count($product->pros) > 0)
-                                <div>
-                                    <h6 class="text-xs font-medium text-green-700 mb-1">Pros:</h6>
-                                    <ul class="text-xs text-green-600 space-y-1">
-                                        @foreach(array_slice($product->pros, 0, 2) as $pro)
-                                            <li>• {{ $pro }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            @endif
-                            
-                            @if($product->cons && count($product->cons) > 0)
-                                <div>
-                                    <h6 class="text-xs font-medium text-red-700 mb-1">Cons:</h6>
-                                    <ul class="text-xs text-red-600 space-y-1">
-                                        @foreach(array_slice($product->cons, 0, 2) as $con)
-                                            <li>• {{ $con }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            @endif
-                        </div>
                         
                         <!-- Affiliate Button - Luôn hiển thị nếu có affiliate_url -->
                         @if($product->affiliate_url)

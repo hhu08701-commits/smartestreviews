@@ -4,11 +4,11 @@
 @section('description', 'Read our privacy policy to understand how we collect, use, and protect your personal information.')
 
 @section('content')
-<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<div class="max-w-[1600px] mx-auto px-6 sm:px-8 lg:px-12 py-8">
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Main Content -->
         <div class="lg:col-span-2">
-            <article class="bg-white rounded-lg shadow-lg p-8">
+            <article class="bg-gradient-to-br from-white via-blue-50/30 to-sky-50/20 rounded-xl shadow-lg border border-blue-100/50 p-8 lg:p-10 backdrop-blur-sm">
                 <h1 class="text-4xl font-bold text-gray-900 mb-8">Privacy Policy</h1>
                 
                 <div class="prose max-w-none">
@@ -107,7 +107,7 @@
             </div>
 
             <!-- Our Sources -->
-            <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="bg-gradient-to-br from-white via-blue-50/30 to-sky-50/20 rounded-lg shadow-md border border-blue-100/50 p-6 backdrop-blur-sm">
                 <h3 class="text-lg font-semibold text-gray-900 mb-4">Our Sources</h3>
                 <div class="space-y-4">
                     @forelse($sources as $source)

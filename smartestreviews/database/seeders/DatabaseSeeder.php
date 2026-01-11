@@ -21,6 +21,8 @@ class DatabaseSeeder extends Seeder
             ProductSeeder::class,
             PostSeeder::class,
             AffiliateLinkSeeder::class,
+            HotProductSeeder::class,
+            SlideshowSlideSeeder::class,
         ]);
     }
 }

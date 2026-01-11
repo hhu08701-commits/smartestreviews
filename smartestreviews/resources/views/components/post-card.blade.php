@@ -1,6 +1,6 @@
 @props(['post'])
 
-<article class="card hover:shadow-lg transition-shadow duration-300">
+<article class="card hover:shadow-lg transition-shadow duration-300" style="background: linear-gradient(to bottom, rgba(255,255,255,0.95) 0%, rgba(240,249,255,0.8) 100%); border: 1px solid rgba(14, 165, 233, 0.15);">
             @if($post->featured_image_url)
                 <div class="aspect-w-16 aspect-h-9">
                     <img 

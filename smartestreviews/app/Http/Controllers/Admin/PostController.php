@@ -239,11 +239,18 @@ class PostController extends Controller
         $badges = $request->badges ? (is_array($request->badges) ? $request->badges : array_filter(explode("\n", $request->badges))) : null;
         $metaKeywords = $request->meta_keywords ? (is_array($request->meta_keywords) ? $request->meta_keywords : array_filter(explode(',', $request->meta_keywords))) : null;
 
+        // Convert line breaks to <br> tags for content
+        $content = $request->content;
+        if ($content) {
+            // Convert \n to <br> tags, escape HTML để tránh XSS
+            $content = nl2br(e($content));
+        }
+
         $post = Post::create(array_merge([
             'title' => $request->title,
             'slug' => $request->slug ?: Str::slug($request->title),
             'excerpt' => $request->excerpt,
-            'content' => $request->content,
+            'content' => $content,
             'post_type' => $request->post_type,
             'status' => $request->status,
             'author_id' => $request->author_id,
@@ -298,6 +305,13 @@ class PostController extends Controller
         
         $post->load(['categories', 'tags', 'affiliateLinks']);
         $existingAffiliateLinks = \App\Models\AffiliateLink::where('post_id', null)->where('enabled', true)->get();
+
+        // Convert <br> tags back to \n for textarea editing
+        if ($post->content) {
+            $post->content = str_replace(['<br>', '<br/>', '<br />'], "\n", $post->content);
+            // Decode HTML entities
+            $post->content = html_entity_decode($post->content, ENT_QUOTES, 'UTF-8');
+        }
 
         return view('admin.posts.edit', compact('post', 'categories', 'tags', 'users', 'existingAffiliateLinks'));
     }
@@ -480,12 +494,19 @@ class PostController extends Controller
         $badges = $request->filled('badges') ? (is_array($request->badges) ? array_filter($request->badges) : array_filter(explode("\n", trim($request->badges)))) : null;
         $metaKeywords = $request->filled('meta_keywords') ? (is_array($request->meta_keywords) ? array_filter($request->meta_keywords) : array_filter(array_map('trim', explode(',', $request->meta_keywords)))) : null;
 
+        // Convert line breaks to <br> tags for content
+        $content = $request->content;
+        if ($content) {
+            // Convert \n to <br> tags
+            $content = nl2br(e($content));
+        }
+
         try {
             $updateData = array_merge([
                 'title' => $request->title,
                 'slug' => $request->slug ?: Str::slug($request->title),
                 'excerpt' => $request->excerpt,
-                'content' => $request->content,
+                'content' => $content,
                 'post_type' => $request->post_type,
                 'status' => $request->status,
                 'author_id' => $request->author_id,

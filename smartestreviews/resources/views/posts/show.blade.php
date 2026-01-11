@@ -55,7 +55,7 @@ if ($post->post_type === 'review' && $post->rating) {
 @endsection
 
 @section('content')
-<div class="max-w-4xl mx-auto">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <!-- Breadcrumbs -->
     <x-breadcrumbs :items="[
         ['title' => 'Home', 'url' => route('home')],
@@ -63,11 +63,12 @@ if ($post->post_type === 'review' && $post->rating) {
         ['title' => $post->title]
     ]" />
 
-    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        <!-- Main Content -->
-        <div class="lg:col-span-3">
+    <div class="max-w-[1600px] mx-auto px-6 sm:px-8 lg:px-12">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 lg:gap-12 py-8">
+            <!-- Main Content -->
+            <div class="lg:col-span-4">
             <!-- Post Header -->
-            <article class="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-8">
+                    <article class="bg-gradient-to-br from-white via-blue-50/30 to-sky-50/20 rounded-xl shadow-lg border border-blue-100/50 p-10 lg:p-12 mb-10 backdrop-blur-sm">
                 <div class="flex items-center space-x-2 mb-4">
                     @foreach($post->categories->take(2) as $category)
                         <span 
@@ -78,7 +79,7 @@ if ($post->post_type === 'review' && $post->rating) {
                     @endforeach
                 </div>
 
-                <h1 class="text-3xl font-bold text-gray-900 mb-4">{{ $post->title }}</h1>
+                <h1 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">{{ $post->title }}</h1>
                 
                 <div class="flex items-center space-x-4 text-sm text-gray-500 mb-6">
                     <span>By {{ $post->author->name }}</span>
@@ -100,27 +101,27 @@ if ($post->post_type === 'review' && $post->rating) {
                     <img 
                         src="{{ $post->featured_image }}" 
                         alt="{{ $post->title }}"
-                        class="w-full h-64 object-cover rounded-lg mb-6"
+                        class="w-full h-auto max-h-[500px] object-cover rounded-xl mb-8 shadow-lg"
                         loading="lazy"
                     >
                 @endif
 
 
                 <!-- Content với styling cải thiện -->
-                <div class="prose prose-lg max-w-none 
+                <div class="prose prose-xl max-w-none 
                     prose-headings:font-bold prose-headings:text-gray-900
-                    prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-6
-                    prose-a:text-[#f8c2eb] prose-a:font-semibold prose-a:no-underline hover:prose-a:underline
-                    prose-strong:text-gray-900 prose-strong:font-semibold
-                    prose-ul:space-y-2 prose-ul:mb-6
-                    prose-ol:space-y-2 prose-ol:mb-6
-                    prose-li:text-gray-700 prose-li:leading-relaxed
-                    prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-4
-                    prose-h3:text-xl prose-h3:mt-6 prose-h3:mb-3
-                    prose-img:rounded-lg prose-img:shadow-md prose-img:my-6
-                    prose-blockquote:border-l-4 prose-blockquote:border-blue-500 prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-gray-600
-                    prose-code:text-blue-600 prose-code:bg-blue-50 prose-code:px-1 prose-code:rounded
-                    prose-pre:bg-gray-900 prose-pre:text-gray-100">
+                    prose-p:text-gray-800 prose-p:leading-relaxed prose-p:mb-7 prose-p:text-lg
+                    prose-a:text-blue-600 prose-a:font-semibold prose-a:no-underline hover:prose-a:underline hover:prose-a:text-blue-700
+                    prose-strong:text-gray-900 prose-strong:font-bold
+                    prose-ul:space-y-3 prose-ul:mb-7
+                    prose-ol:space-y-3 prose-ol:mb-7
+                    prose-li:text-gray-800 prose-li:leading-relaxed prose-li:text-lg
+                    prose-h2:text-3xl prose-h2:mt-10 prose-h2:mb-5 prose-h2:font-bold
+                    prose-h3:text-2xl prose-h3:mt-8 prose-h3:mb-4 prose-h3:font-bold
+                    prose-img:rounded-xl prose-img:shadow-xl prose-img:my-8
+                    prose-blockquote:border-l-4 prose-blockquote:border-blue-500 prose-blockquote:pl-6 prose-blockquote:italic prose-blockquote:text-gray-700 prose-blockquote:text-lg prose-blockquote:bg-blue-50 prose-blockquote:py-4 prose-blockquote:my-8
+                    prose-code:text-blue-700 prose-code:bg-blue-50 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:font-mono prose-code:text-base
+                    prose-pre:bg-gray-900 prose-pre:text-gray-100 prose-pre:rounded-xl prose-pre:p-6 prose-pre:my-8">
                     {!! $post->content !!}
                 </div>
 
@@ -136,7 +137,7 @@ if ($post->post_type === 'review' && $post->rating) {
                 $activeProductShowcases = $post->productShowcases ? $post->productShowcases->where('is_active', true) : collect([]);
             @endphp
             @if($activeProductShowcases->count() > 0)
-                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-500 rounded-lg p-6 mb-8">
+                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-500 rounded-xl p-8 lg:p-10 mb-10 shadow-md">
                     <h3 class="text-xl font-semibold text-gray-900 mb-6 flex items-center">
                         <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
@@ -226,10 +227,6 @@ if ($post->post_type === 'review' && $post->rating) {
                 </div>
             @endif
 
-            <!-- Review Box for Review Posts -->
-            @if($post->post_type === 'review')
-                <x-review-box :post="$post" />
-            @endif
 
             <!-- List Table for List Posts -->
             @if($post->post_type === 'list')
@@ -238,7 +235,7 @@ if ($post->post_type === 'review' && $post->rating) {
 
             <!-- FAQs -->
             @if($post->faqs->count() > 0)
-                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-500 rounded-lg p-6 mb-8">
+                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-500 rounded-xl p-8 lg:p-10 mb-10 shadow-md">
                     <h3 class="text-xl font-semibold text-gray-900 mb-4 flex items-center">
                         <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -278,7 +275,7 @@ if ($post->post_type === 'review' && $post->rating) {
 
             <!-- Related Posts -->
             @if($relatedPosts->count() > 0)
-                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-500 rounded-lg p-6 mb-8">
+                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-500 rounded-xl p-8 lg:p-10 mb-10 shadow-md">
                     <h3 class="text-xl font-semibold text-gray-900 mb-4 flex items-center">
                         <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
@@ -313,16 +310,7 @@ if ($post->post_type === 'review' && $post->rating) {
             @endif
         </div>
 
-        <!-- Sidebar -->
-        <div class="lg:col-span-1">
-            <!-- Recent Posts -->
-            @if($recentCategoryPosts->count() > 0)
-                <x-sidebar.recent-posts :posts="$recentCategoryPosts" />
-            @endif
-
-            <!-- Sponsored Content -->
-            <x-sidebar.sponsored />
-        </div>
+        <!-- Sidebar removed - Full width content -->
     </div>
 </div>
 @endsection
